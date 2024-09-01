@@ -1,5 +1,8 @@
-# SQLite Database
+# Database files
+*.sqlite
+*.sqlite3
 *.db
+*.db-journal
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
