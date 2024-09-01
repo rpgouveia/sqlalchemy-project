@@ -12,7 +12,7 @@ session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
     db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
+    return db
+
+
+Base.metadata.create_all(engine)

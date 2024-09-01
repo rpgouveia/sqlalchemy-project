@@ -7,7 +7,7 @@ from datetime import date
 def main():
     db = get_db()
 
-    # TEST: Creating new Client
+    # TEST: Creating new Client - Success!
     birthdate_client1_str = "1982-02-10"
     birthdate = date.fromisoformat(birthdate_client1_str)
     new_client = Client(
@@ -21,7 +21,7 @@ def main():
     created_client = create_client(db, new_client)
     print(f"Cliente criado com sucesso! ID: {created_client.id}")
 
-    # TEST: Fetching a Client by ID
+    # TEST: Fetching a Client by ID - Success!
     client_id = 1
     client = get_client(db, client_id)
     if client:

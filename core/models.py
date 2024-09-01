@@ -34,7 +34,8 @@ class Accidents(Base):
 class Insurance(Base):
     __tablename__                   = "insurance"
     id: Mapped[int]                 = mapped_column(primary_key=True)
-    insurance_number: Mapped[int]   = mapped_column(Integer(11), nullable=False, unique=True)
+    # insurance_number: Mapped[int]   = mapped_column(Integer(11), nullable=False, unique=True)
+    insurance_number: Mapped[int]   = mapped_column(Integer(), nullable=False, unique=True)
     start_date: Mapped[date]        = mapped_column(Date, nullable=False)
     end_date: Mapped[date]          = mapped_column(Date, nullable=True)
     insured_value: Mapped[Numeric]  = mapped_column(Numeric(precision=10, scale=2, asdecimal=True), nullable=False)
@@ -61,9 +62,11 @@ class Insurance(Base):
 class Apartment(Base):
     __tablename__                   = "apartment"
     id: Mapped[int]                 = mapped_column(primary_key=True)
-    apartment_number: Mapped[int]   = mapped_column(Integer(4), nullable=False, unique=True)
+    # apartment_number: Mapped[int]   = mapped_column(Integer(4), nullable=False, unique=True)
+    apartment_number: Mapped[int]   = mapped_column(Integer(), nullable=False, unique=True)
     address: Mapped[str]            = mapped_column(String(255), nullable=False)
-    area: Mapped[int]               = mapped_column(Integer(4), nullable=False)
+    # area: Mapped[int]               = mapped_column(Integer(4), nullable=False)
+    area: Mapped[int]               = mapped_column(Integer(), nullable=False)
     client_id: Mapped[int]          = mapped_column(ForeignKey("client.id"))
     insurance_id: Mapped[int]       = mapped_column(ForeignKey("insurance.id"))
 
@@ -85,10 +88,12 @@ class Client(Base):
     __tablename__                 = "client"
     id: Mapped[int]               = mapped_column(primary_key=True)
     name: Mapped[str]             = mapped_column(String(100), nullable=False)
-    cpf: Mapped[int]              = mapped_column(Integer(11), nullable=False)
+    # cpf: Mapped[int]              = mapped_column(Integer(11), nullable=False)
+    cpf: Mapped[int]              = mapped_column(Integer(), nullable=False)
     birthdate: Mapped[date]       = mapped_column(Date, nullable=False)           # Default Format YYYY-MM-DD
     address: Mapped[str]          = mapped_column(String(255), nullable=True)     # Opcional? Conversar com professor
-    phone: Mapped[int]            = mapped_column(Integer(11), nullable=False)
+    # phone: Mapped[int]            = mapped_column(Integer(11), nullable=False)
+    phone: Mapped[int]            = mapped_column(Integer(), nullable=False)
     email: Mapped[str]            = mapped_column(String(255), nullable=False, unique=True)
     insurances: Mapped[Insurance] = relationship("Insurance", backref="client")
     apartment: Mapped[Apartment]  = relationship("Apartment", backref="client")
