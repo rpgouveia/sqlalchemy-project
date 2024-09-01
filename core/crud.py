@@ -1,14 +1,5 @@
 from sqlalchemy.orm import Session
-from core.database import session_local
 from core.models import Base, Client, Apartment, Insurance, Accidents
-
-
-def get_db():
-    db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def create_client(db: Session, client: Client):
