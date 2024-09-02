@@ -88,7 +88,7 @@ class Client(Base):
     __tablename__                 = "client"
     id: Mapped[int]               = mapped_column(primary_key=True)
     name: Mapped[str]             = mapped_column(String(100), nullable=False)
-    # cpf: Mapped[int]              = mapped_column(Integer(11), nullable=False)  # Problema no SQLite
+    #cpf: Mapped[int]              = mapped_column(Integer(11), nullable=False)  # Problema no SQLite
     cpf: Mapped[int]              = mapped_column(Integer(), nullable=False)
     birthdate: Mapped[date]       = mapped_column(Date, nullable=False)           # Default Format YYYY-MM-DD
     address: Mapped[str]          = mapped_column(String(255), nullable=True)     # Opcional? Conversar com professor
@@ -97,6 +97,11 @@ class Client(Base):
     email: Mapped[str]            = mapped_column(String(255), nullable=False, unique=True)
     insurances: Mapped[Insurance] = relationship("Insurance", backref="client")
     apartment: Mapped[Apartment]  = relationship("Apartment", backref="client")
+
+    # CPF Validation >> 11 numbers limit, no mask >> 123.456.789-10
+    
+
+    # Phone Number Validation >> 11 numbers limit, no mask >> (12) 98765-4321
 
     # Decorator
     @property
