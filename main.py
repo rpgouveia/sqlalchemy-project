@@ -7,7 +7,7 @@ from datetime import date
 def main():
     db = connect_db()
 
-    # # TEST: Creating new Client - Success!
+    # TEST: Creating new Client - Success!
     birthdate_client1_str = "1982-02-10"
     birthdate = date.fromisoformat(birthdate_client1_str)
     new_client = Client(
@@ -21,6 +21,8 @@ def main():
     created_client = create_client(db, new_client)
     print(f"Cliente criado com sucesso! ID: {created_client.id}")
 
+
+    # TEST: Creating another new Client - Success!
     birthdate_client1_str = "1987-07-07"
     birthdate = date.fromisoformat(birthdate_client1_str)
     new_client = Client(
@@ -35,7 +37,7 @@ def main():
     print(f"Cliente criado com sucesso! ID: {created_client.id}")
 
 
-    # TEST: Fetch all Clients
+    # TEST: Fetch all Clients - Success!
     clients = get_all_clients(db)
 
     if clients:
@@ -55,7 +57,7 @@ def main():
     #     print(f"Cliente com ID {client_id} não encontrado.")
 
 
-    ## TEST: Update Client by ID - Success!
+    # # TEST: Update Client by ID - Success!
     # client_id = 1
 
     # # Fetch the client to update
@@ -76,21 +78,23 @@ def main():
 
 
     # TEST: Delete Client by ID
-    # client_id = 2
+    # client_id = 1
 
-    # # Confirm deletion (optional)
+    # # Validate ID
+    # client = get_client(db, client_id)
+    # if not client:
+    #     print(f"Cliente com ID {client_id} não encontrado.")
+    #     return
+
+    # # Confirm deletion
     # confirmation = input(f"Tem certeza que deseja deletar o cliente com ID {client_id}? (s/n): ")
     # if confirmation.lower() != 's':
     #     print("Cancelando a operação.")
     #     return
 
     # # Delete client
-    # deleted_client = delete_client(db, client_id)
-
-    # if deleted_client:
-    #     print(f"Cliente com ID {client_id} deletado com sucesso!")
-    # else:
-    #     print(f"Cliente com ID {client_id} não encontrado.")
+    # delete_client(db, client_id)
+    # print("Cliente deletado com sucesso.")
 
 
     db.close()
