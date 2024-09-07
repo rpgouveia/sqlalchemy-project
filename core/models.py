@@ -19,9 +19,6 @@ class Client(Base):
     phone: Mapped[str]            = mapped_column(String(11), nullable=False)
     email: Mapped[str]            = mapped_column(String(255), nullable=False, unique=True)
 
-    # Birthdate Default Format: YYYY-MM-DD
-    # Validations moved to Input Data Functions
-
     @property
     def age(self) -> int:
         today: date = date.today()
