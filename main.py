@@ -12,7 +12,7 @@ def main():
     birthdate = date.fromisoformat(birthdate_client1_str)
     new_client = Client(
         name="Fulano da Silva", 
-        cpf=12345678900,
+        cpf="12345678900",
         birthdate=birthdate,
         address="Rua X, número 123, prédio Y",
         phone=41987659174,
@@ -27,7 +27,7 @@ def main():
     birthdate = date.fromisoformat(birthdate_client1_str)
     new_client = Client(
         name="Beltrano da Silva", 
-        cpf=12345678900,
+        cpf="12345678900",
         birthdate=birthdate,
         address="Rua Y, número 321, prédio Z",
         phone=41987659174,
