@@ -1,38 +1,38 @@
-from core.crud import create_client, get_client, get_all_clients, update_client
+from core.crud import create_client, get_client, get_all_clients, update_client, delete_client
 from core.models import Client
-from core.database import get_db
+from core.database import connect_db
 from datetime import date
 
 
 def main():
-    db = get_db()
+    db = connect_db()
 
     # # TEST: Creating new Client - Success!
-    # birthdate_client1_str = "1982-02-10"
-    # birthdate = date.fromisoformat(birthdate_client1_str)
-    # new_client = Client(
-    #     name="Fulano da Silva", 
-    #     cpf=12345678900,
-    #     birthdate=birthdate,
-    #     address="Rua X, número 123, prédio Y",
-    #     phone=41987659174,
-    #     email="fulano@mail.com"
-    # )
-    # created_client = create_client(db, new_client)
-    # print(f"Cliente criado com sucesso! ID: {created_client.id}")
+    birthdate_client1_str = "1982-02-10"
+    birthdate = date.fromisoformat(birthdate_client1_str)
+    new_client = Client(
+        name="Fulano da Silva", 
+        cpf=12345678900,
+        birthdate=birthdate,
+        address="Rua X, número 123, prédio Y",
+        phone=41987659174,
+        email="fulano@mail.com"
+    )
+    created_client = create_client(db, new_client)
+    print(f"Cliente criado com sucesso! ID: {created_client.id}")
 
-    # birthdate_client1_str = "1987-07-07"
-    # birthdate = date.fromisoformat(birthdate_client1_str)
-    # new_client = Client(
-    #     name="Beltrano da Silva", 
-    #     cpf=12345678900,
-    #     birthdate=birthdate,
-    #     address="Rua Y, número 321, prédio Z",
-    #     phone=41987659174,
-    #     email="beltrano@mail.com"
-    # )
-    # created_client = create_client(db, new_client)
-    # print(f"Cliente criado com sucesso! ID: {created_client.id}")
+    birthdate_client1_str = "1987-07-07"
+    birthdate = date.fromisoformat(birthdate_client1_str)
+    new_client = Client(
+        name="Beltrano da Silva", 
+        cpf=12345678900,
+        birthdate=birthdate,
+        address="Rua Y, número 321, prédio Z",
+        phone=41987659174,
+        email="beltrano@mail.com"
+    )
+    created_client = create_client(db, new_client)
+    print(f"Cliente criado com sucesso! ID: {created_client.id}")
 
 
     # TEST: Fetch all Clients
@@ -56,7 +56,7 @@ def main():
 
 
     ## TEST: Update Client by ID - Success!
-    # client_id = 1  # Replace with the actual ID of the client you want to update
+    # client_id = 1
 
     # # Fetch the client to update
     # client = get_client(db, client_id)
@@ -64,7 +64,7 @@ def main():
     #     print(f"Cliente com ID {client_id} não encontrado.")
     #     return
 
-    # # Update client information (modify these as needed)
+    # # Update client information
     # client.name = "Ciclano dos Santos"
     # client.email = "ciclano@mail.com"
     # client.phone = 41598763210
@@ -73,6 +73,24 @@ def main():
     # update_client(db, client)
 
     # print(f"Cliente com ID {client_id} atualizado com sucesso!")
+
+
+    # TEST: Delete Client by ID
+    # client_id = 2
+
+    # # Confirm deletion (optional)
+    # confirmation = input(f"Tem certeza que deseja deletar o cliente com ID {client_id}? (s/n): ")
+    # if confirmation.lower() != 's':
+    #     print("Cancelando a operação.")
+    #     return
+
+    # # Delete client
+    # deleted_client = delete_client(db, client_id)
+
+    # if deleted_client:
+    #     print(f"Cliente com ID {client_id} deletado com sucesso!")
+    # else:
+    #     print(f"Cliente com ID {client_id} não encontrado.")
 
 
     db.close()

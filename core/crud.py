@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from core.models import Base, Client, Apartment, Insurance, Accidents
+from core.models import Client
 
 
 def create_client(db: Session, client: Client):
@@ -27,3 +27,4 @@ def delete_client(db: Session, client_id: int):
     client = db.query(Client).filter(Client.id == client_id).first()
     db.delete(client)
     db.commit()
+
