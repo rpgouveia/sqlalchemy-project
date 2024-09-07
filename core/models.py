@@ -20,28 +20,7 @@ class Client(Base):
     email: Mapped[str]            = mapped_column(String(255), nullable=False, unique=True)
 
     # Birthdate Default Format: YYYY-MM-DD
-    # CPF Validation, only numbers
-    @property
-    def cpf(self) -> str:
-        if not self.__cpf or not re.match(r"^\d{11}$", self.__cpf):
-            raise ValueError("CPF inválido. Deve conter 11 dígitos numéricos.")
-        return self.__cpf
-
-    @cpf.setter
-    def cpf(self, value: str):
-        self.__cpf = value
-
-
-    # Phone Number Validation, only numbers
-    @property
-    def phone(self) -> str:
-        if not self.__phone or not re.match(r"^\d{11}$", self.__phone):
-            raise ValueError("Telefone inválido. Deve conter 11 dígitos numéricos.")
-        return self.__phone
-
-    @phone.setter
-    def phone(self, value: str):
-        self.__phone = value
+    # Validations moved to Input Data Functions
 
     @property
     def age(self) -> int:

@@ -85,11 +85,6 @@
 #     # insurances: Mapped[Insurance] = relationship("Insurance", backref="client")
 #     # apartment: Mapped[Apartment]  = relationship("Apartment", backref="client")
 
-#     # CPF Validation >> 11 numbers limit, no mask >> 123.456.789-10
-    
-
-#     # Phone Number Validation >> 11 numbers limit, no mask >> (12) 98765-4321
-
 #     # Decorator
 #     @property
 #     def age(self) -> int:
