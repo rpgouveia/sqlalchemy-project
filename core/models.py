@@ -63,7 +63,7 @@ class Apartment(Base):
     __tablename__                   = "apartment"
     id: Mapped[int]                 = mapped_column(primary_key=True)
     # apartment_number: Mapped[int]   = mapped_column(Integer(4), nullable=False, unique=True)  # Problema no SQLite
-    apartment_number: Mapped[int]   = mapped_column(Integer(), nullable=False, unique=True)
+    apartment_number: Mapped[int]   = mapped_column(Integer(), nullable=False)
     address: Mapped[str]            = mapped_column(String(255), nullable=False)
     # area: Mapped[int]               = mapped_column(Integer(4), nullable=False)               # Problema no SQLite
     area: Mapped[int]               = mapped_column(Integer(), nullable=False)
