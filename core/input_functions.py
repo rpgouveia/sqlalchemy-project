@@ -1,38 +1,27 @@
-from core.validations import validate_cpf, validate_phone, validate_birthdate, validate_integer_number
+from core.validations import validate_cpf, validate_phone, validate_birthdate, validate_integer_number, validate_email
+from core.crud import create_client, get_all_clients, get_client, update_client, delete_client
 from sqlalchemy.orm import Session
 from core.models import Client
 from typing import List, Union
 from datetime import date
-from core.crud import (
-    create_client,
-    get_all_clients,
-    get_client,
-    update_client,
-    delete_client
-)
 
 
 def create_new_client(db: Session) -> None:
     try:
         name: str = input("Digite o nome completo do cliente: ")
-        cpf: str = input("Digite o CPF do cliente: ")
-        birthdate_str: str = input("Digite a data de nascimento do cliente (AAAA-MM-DD): ")
+        cpf: str = validate_cpf(input("Digite o CPF do cliente: "))
+        birthdate: date = validate_birthdate(input("Digite a data de nascimento do cliente (AAAA-MM-DD): "))
         address: str = input("Digite o endereço do cliente: ")
-        phone: str = input("Digite o telefone do cliente (com DDD): ")
-        email: str = input("Digite o e-mail do cliente: ")
-
-        # Validations
-        valid_cpf: str = validate_cpf(cpf)
-        valid_phone: str = validate_phone(phone)
-        valid_birthdate: date = validate_birthdate(birthdate_str)
+        phone: str = validate_phone(input("Digite o telefone do cliente (com DDD): "))
+        email: str = validate_email(input("Digite o e-mail do cliente: "))
 
         # Create object Client
         new_client: Client = Client(
             name=name,
-            cpf=valid_cpf,
-            birthdate=valid_birthdate,
+            cpf=cpf,
+            birthdate=birthdate,
             address=address,
-            phone=valid_phone,
+            phone=phone,
             email=email
         )
 

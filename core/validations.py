@@ -32,3 +32,10 @@ def validate_integer_number(prompt) -> int:
         except ValueError:
             print("Opção inválida. Por favor, digite um número inteiro.")
 
+
+def validate_email(email: str) -> str:
+    email_pattern: str = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
+    if not re.match(email_pattern, email):
+        raise ValueError("Email inválido. Por favor, digite um email válido.")
+    return email
+
