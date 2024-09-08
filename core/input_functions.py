@@ -1,4 +1,4 @@
-from core.validations import validate_cpf, validate_phone, validate_birthdate, validate_option
+from core.validations import validate_cpf, validate_phone, validate_birthdate, validate_integer_number
 from sqlalchemy.orm import Session
 from core.models import Client
 from typing import List, Union
@@ -57,7 +57,7 @@ def read_all_clients(db: Session) -> None:
 
 
 def read_client(db: Session) -> None:
-    client_id: int = validate_option("Digite o id do cliente: ")
+    client_id: int = validate_integer_number("Digite o id do cliente: ")
     client: Union[Client | None] = get_client(db, client_id)
 
     if client:
@@ -68,7 +68,7 @@ def read_client(db: Session) -> None:
 
 def update_client(db: Session) -> None:
     # Validate ID
-    client_id: int = validate_option("Digite o id do cliente: ")
+    client_id: int = validate_integer_number("Digite o id do cliente: ")
     client: Union[Client | None] = get_client(db, client_id)
     if not client:
         print(f"Cliente com ID {client_id} não encontrado.")
@@ -86,7 +86,7 @@ def update_client(db: Session) -> None:
 
 def delete_client(db: Session) -> None:
     # Validate ID
-    client_id: int = validate_option("Digite o id do cliente: ")
+    client_id: int = validate_integer_number("Digite o id do cliente: ")
     client: Union[Client | None] = get_client(db, client_id)
     if not client:
         print(f"Cliente com ID {client_id} não encontrado.")

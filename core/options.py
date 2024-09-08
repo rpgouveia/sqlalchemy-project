@@ -1,4 +1,4 @@
-from core.validations import validate_option
+from core.validations import validate_integer_number
 from core.input_functions import (
     create_new_client, 
     read_all_clients, 
@@ -19,7 +19,7 @@ def program_options(db) -> bool:
 
     print(options)
 
-    option: int = validate_option("Escolha uma opção: ")
+    option: int = validate_integer_number("Escolha uma opção: ")
 
     match option:
         case 1:
