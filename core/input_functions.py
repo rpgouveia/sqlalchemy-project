@@ -51,7 +51,17 @@ def read_client_by_id(db: Session) -> None:
     client: Union[Client | None] = get_client(db, client_id)
 
     if client:
-        print(f"Cliente encontrado: {client.name}")
+        print(
+            f"\n# Dados do Cliente #\n"
+            f"id: {client.id},\n"
+            f"name: {client.name},\n"
+            f"cpf: {client.cpf},\n"
+            f"birthdate: {client.birthdate},\n"
+            f"age: {client.age},\n"
+            f"address: {client.address},\n"
+            f"phone: {client.phone},\n"
+            f"email: {client.email}\n"
+        )
     else:
         print(f"Cliente com ID {client_id} não encontrado.")
 
