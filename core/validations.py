@@ -21,7 +21,7 @@ def validate_birthdate(birthdate_str: str) -> date:
     except ValueError:
         raise ValueError("Data de nascimento inválida. O formato deve ser AAAA-MM-DD.")
 
-def validate_option(prompt):
+def validate_option(prompt) -> int:
     while True:
         try:
             option = int(input(prompt))

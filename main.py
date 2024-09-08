@@ -1,10 +1,11 @@
+from sqlalchemy.orm import Session
 from core.options import program_options
 from core.database import connect_db
 
 
 
 def main():
-    db = connect_db()
+    db: Session = connect_db()
 
     status = True
     while (status):
