@@ -56,7 +56,7 @@ def read_all_clients(db: Session) -> None:
         print("Nenhum cliente encontrado.")
 
 
-def read_client(db: Session) -> None:
+def read_client_by_id(db: Session) -> None:
     client_id: int = validate_integer_number("Digite o id do cliente: ")
     client: Union[Client | None] = get_client(db, client_id)
 
@@ -66,7 +66,7 @@ def read_client(db: Session) -> None:
         print(f"Cliente com ID {client_id} não encontrado.")
 
 
-def update_client(db: Session) -> None:
+def update_client_by_id(db: Session) -> None:
     # Validate ID
     client_id: int = validate_integer_number("Digite o id do cliente: ")
     client: Union[Client | None] = get_client(db, client_id)
@@ -75,16 +75,18 @@ def update_client(db: Session) -> None:
         return
 
     # Update client information
-    client.name = "Ciclano dos Santos"
-    client.email = "ciclano@mail.com"
-    client.phone = 41598763210
+    client.name = input("Digite o nome do cliente: ")
+    client.email = input("Digite o e-mail do cliente: ")
+    # phone = input("Digite o telefone do cliente (com o DDD): ")
+    # valid_phone = validate_phone(phone)
+    client.phone = validate_phone(input("Digite o telefone do cliente (com o DDD): "))
 
     # Update the client in the database
     update_client(db, client)
     print(f"Cliente com ID {client_id} atualizado com sucesso!")
 
 
-def delete_client(db: Session) -> None:
+def delete_client_by_id(db: Session) -> None:
     # Validate ID
     client_id: int = validate_integer_number("Digite o id do cliente: ")
     client: Union[Client | None] = get_client(db, client_id)

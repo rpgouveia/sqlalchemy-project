@@ -4,7 +4,7 @@ from core.models import Base
 
 
 # Setup SQLite Database
-engine: Engine = create_engine("sqlite:///insurance.db", echo=True)
+engine: Engine = create_engine("sqlite:///insurance.db", echo=False)
 
 # Session Factory
 session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)

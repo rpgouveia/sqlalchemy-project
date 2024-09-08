@@ -2,8 +2,9 @@ from core.validations import validate_integer_number
 from core.input_functions import (
     create_new_client, 
     read_all_clients, 
-    read_client, 
-    update_client
+    read_client_by_id, 
+    update_client_by_id,
+    delete_client_by_id
 )
 
 
@@ -31,15 +32,15 @@ def program_options(db) -> bool:
             return True
 
         case 3:
-            read_client(db)
+            read_client_by_id(db)
             return True
 
         case 4:
-            update_client(db)
+            update_client_by_id(db)
             return True
 
         case 5:
-            ...
+            delete_client_by_id(db)
             return True
 
         case 6:
