@@ -1,4 +1,5 @@
 from core.validations import validate_integer_number
+from sqlalchemy.orm import Session
 from core.input_functions import (
     create_new_client, 
     read_all_clients, 
@@ -8,8 +9,8 @@ from core.input_functions import (
 )
 
 
-def program_options(db) -> bool:
-    options = """
+def program_options(db: Session) -> bool:
+    options: str = """
     1 - Cadastrar um novo cliente
     2 - Listar todos os clientes
     3 - Ler um cliente por ID

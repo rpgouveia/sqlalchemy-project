@@ -2,6 +2,7 @@ from core.validations import validate_cpf, validate_phone, validate_birthdate, v
 from sqlalchemy.orm import Session
 from core.models import Client
 from typing import List, Union
+from datetime import date
 from core.crud import (
     create_client,
     get_all_clients,
@@ -21,9 +22,9 @@ def create_new_client(db: Session) -> None:
         email: str = input("Digite o e-mail do cliente: ")
 
         # Validations
-        valid_cpf = validate_cpf(cpf)
-        valid_phone = validate_phone(phone)
-        valid_birthdate = validate_birthdate(birthdate_str)
+        valid_cpf: str = validate_cpf(cpf)
+        valid_phone: str = validate_phone(phone)
+        valid_birthdate: date = validate_birthdate(birthdate_str)
 
         # Create object Client
         new_client: Client = Client(
@@ -96,7 +97,7 @@ def delete_client_by_id(db: Session) -> None:
         return
 
     # Confirm deletion
-    confirmation = input(f"Tem certeza que deseja deletar o cliente com ID {client.id}? (s/n): ")
+    confirmation: str = input(f"Tem certeza que deseja deletar o cliente com ID {client.id}? (s/n): ")
     if confirmation.lower() != 's':
         print("Cancelando a operação.")
         return

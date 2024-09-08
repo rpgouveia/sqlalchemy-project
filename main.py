@@ -3,11 +3,10 @@ from core.options import program_options
 from core.database import connect_db
 
 
-
 def main():
     db: Session = connect_db()
 
-    status = True
+    status: bool = True
     while (status):
         status = program_options(db)
 

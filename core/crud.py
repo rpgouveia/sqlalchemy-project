@@ -25,7 +25,7 @@ def update_client(db: Session, client: Client) -> Client:
 
 
 def delete_client(db: Session, client_id: int) -> None:
-    client = db.query(Client).filter(Client.id == client_id).first()
+    client: Union[Client | None] = db.query(Client).filter(Client.id == client_id).first()
     db.delete(client)
     db.commit()
 
