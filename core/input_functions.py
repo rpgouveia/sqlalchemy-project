@@ -40,8 +40,8 @@ def read_all_clients(db: Session) -> None:
 
     if clients:
         print("Lista de todos os clientes:")
-        for client in clients:
-            print(f"- {client.name} (ID: {client.id})")
+        for index, client in enumerate(clients, start=1):
+            print(f"{index}) {client.name} (ID: {client.id})")
     else:
         print("Nenhum cliente encontrado.")
 
