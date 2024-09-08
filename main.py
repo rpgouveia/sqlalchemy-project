@@ -3,7 +3,7 @@ from core.options import program_options
 from core.database import connect_db
 
 
-def main():
+def main() -> None:
     db: Session = connect_db()
 
     status: bool = True

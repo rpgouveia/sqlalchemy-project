@@ -1,4 +1,4 @@
-# models.py
+# models.py >> Refatoração para as férias
 
 # Accidents Table
 # class Accidents(Base):
@@ -77,15 +77,14 @@
 #     __tablename__                 = "client"
 #     id: Mapped[int]               = mapped_column(primary_key=True)
 #     name: Mapped[str]             = mapped_column(String(100), nullable=False)
-#     cpf: Mapped[int]              = mapped_column(Integer(), nullable=False)
-#     birthdate: Mapped[date]       = mapped_column(Date, nullable=False)           # Default Format YYYY-MM-DD
+#     cpf: Mapped[str]              = mapped_column(String(11), nullable=False)
+#     birthdate: Mapped[date]       = mapped_column(Date, nullable=False)
 #     address: Mapped[str]          = mapped_column(String(255), nullable=True)
-#     phone: Mapped[int]            = mapped_column(Integer(), nullable=False)
+#     phone: Mapped[str]            = mapped_column(String(11), nullable=False)
 #     email: Mapped[str]            = mapped_column(String(255), nullable=False, unique=True)
 #     # insurances: Mapped[Insurance] = relationship("Insurance", backref="client")
 #     # apartment: Mapped[Apartment]  = relationship("Apartment", backref="client")
 
-#     # Decorator
 #     @property
 #     def age(self) -> int:
 #         today: date = date.today()

@@ -7,7 +7,6 @@ class Base(DeclarativeBase):
     pass
 
 
-# Client Table
 class Client(Base):
     __tablename__                 = "client"
     id: Mapped[int]               = mapped_column(primary_key=True)
