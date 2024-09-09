@@ -15,6 +15,7 @@ from core.crud import (
     update_client, 
     delete_client
 )
+from core.utils import clear_screen
 from typing import List, Union, Optional
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -24,6 +25,7 @@ from datetime import date
 
 def create_new_client(db: Session) -> None:
     try:
+        clear_screen()
         name: str = input("Digite o nome completo do cliente: ")
         cpf: str = validate_cpf(input("Digite o CPF do cliente: "))
         birthdate: date = validate_birthdate(input("Digite a data de nascimento do cliente (AAAA-MM-DD): "))
@@ -51,7 +53,7 @@ def create_new_client(db: Session) -> None:
         )
 
         created_client = create_client(db, new_client)
-        print(f"Cliente criado com sucesso! ID: {created_client.id}")
+        print(f"Cliente criado com sucesso! ID: {created_client.id}\n")
 
     except IntegrityError as ie:
         db.rollback()
@@ -71,10 +73,13 @@ def read_all_clients(db: Session) -> None:
     clients: List[Client] = get_all_clients(db)
 
     if clients:
+        clear_screen()
         print("Lista de todos os clientes:")
         for index, client in enumerate(clients, start=1):
             print(f"{index}) {client.name} (ID: {client.id})")
+        print("")
     else:
+        clear_screen()
         print("Nenhum cliente encontrado.")
 
 
@@ -83,23 +88,25 @@ def read_client_by_id(db: Session) -> None:
     client: Union[Client, None] = get_client(db, client_id)
 
     if client:
+        clear_screen()
         print(
-            f"\n# Dados do Cliente #\n"
-            f"id: {client.id},\n"
-            f"Nome: {client.name},\n"
-            f"CPF: {client.cpf},\n"
-            f"Data de Nascimento: {client.birthdate},\n"
-            f"Idade: {client.age},\n"
-            f"Endereço 1: {client.address_1},\n"
-            f"Endereço 2: {client.address_2 if client.address_2 else 'Não informado'},\n"
-            f"CEP: {client.post_code},\n"
-            f"Cidade: {client.city},\n"
-            f"Estado: {client.state},\n"
-            f"País: {client.country},\n"
-            f"Telefone: {client.phone},\n"
+            f"# Dados do Cliente #\n"
+            f"id: {client.id}\n"
+            f"Nome: {client.name}\n"
+            f"CPF: {client.cpf}\n"
+            f"Data de Nascimento: {client.birthdate}\n"
+            f"Idade: {client.age}\n"
+            f"Endereço 1: {client.address_1}\n"
+            f"Endereço 2: {client.address_2 if client.address_2 else 'Não informado'}\n"
+            f"CEP: {client.post_code}\n"
+            f"Cidade: {client.city}\n"
+            f"Estado: {client.state}\n"
+            f"País: {client.country}\n"
+            f"Telefone: {client.phone}\n"
             f"E-mail: {client.email}\n"
         )
     else:
+        clear_screen()
         print(f"Cliente com ID {client_id} não encontrado.")
 
 
@@ -118,12 +125,13 @@ def update_client_by_id(db: Session) -> None:
         return
 
     try:
+        clear_screen()
         client.name = input("Digite o nome do cliente: ")
         client.email = validate_email(input("Digite o e-mail do cliente: "))
         client.phone = validate_phone(input("Digite o telefone do cliente (com o DDD): "))
 
         update_client(db, client)
-        print(f"Cliente com ID {client.id} atualizado com sucesso!")
+        print(f"Cliente com ID {client.id} atualizado com sucesso!\n")
     
     except IntegrityError as ie:
         db.rollback()
@@ -144,10 +152,12 @@ def delete_client_by_id(db: Session) -> None:
     if not client:
         return
 
+    clear_screen()
     confirmation: str = input(f"Tem certeza que deseja deletar o cliente com ID {client.id}? (s/n): ")
     if confirmation.lower() != 's':
         print("Cancelando a operação.")
         return
 
     delete_client(db, client.id)
-    print("Cliente deletado com sucesso.")
+    print("Cliente deletado com sucesso.\n")
+
