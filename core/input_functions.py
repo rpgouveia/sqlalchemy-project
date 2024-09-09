@@ -1,8 +1,23 @@
-from core.validations import validate_cpf, validate_phone, validate_birthdate, validate_integer_number, validate_email, validate_post_code, validate_country, validate_state
-from core.crud import create_client, get_all_clients, get_client, update_client, delete_client
+from core.validations import (
+    validate_cpf, 
+    validate_phone, 
+    validate_birthdate, 
+    validate_integer_number, 
+    validate_email, 
+    validate_post_code, 
+    validate_country, 
+    validate_state
+)
+from core.crud import (
+    create_client, 
+    get_all_clients, 
+    get_client, 
+    update_client, 
+    delete_client
+)
+from typing import List, Union, Optional
 from sqlalchemy.orm import Session
 from core.models import Client
-from typing import List, Union, Optional
 from datetime import date
 
 
