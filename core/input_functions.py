@@ -2,7 +2,7 @@ from core.validations import validate_cpf, validate_phone, validate_birthdate, v
 from core.crud import create_client, get_all_clients, get_client, update_client, delete_client
 from sqlalchemy.orm import Session
 from core.models import Client
-from typing import List, Union
+from typing import List, Union, Optional
 from datetime import date
 
 
@@ -11,7 +11,12 @@ def create_new_client(db: Session) -> None:
         name: str = input("Digite o nome completo do cliente: ")
         cpf: str = validate_cpf(input("Digite o CPF do cliente: "))
         birthdate: date = validate_birthdate(input("Digite a data de nascimento do cliente (AAAA-MM-DD): "))
-        address: str = input("Digite o endereço do cliente: ")
+        address_1: str = input("Digite o endereço principal do cliente: ")
+        address_2: Optional[str] = input("Digite o complemento do endereço (opcional): ") or None
+        post_code: str = input("Digite o CEP do cliente: ")
+        city: str = input("Digite a cidade do cliente: ")
+        state: str = input("Digite a sigla do estado do cliente (Ex: PR): ")
+        country: str = input("Digite o código do país do cliente (Ex: BR): ")
         phone: str = validate_phone(input("Digite o telefone do cliente (com DDD): "))
         email: str = validate_email(input("Digite o e-mail do cliente: "))
 
@@ -19,7 +24,12 @@ def create_new_client(db: Session) -> None:
             name=name,
             cpf=cpf,
             birthdate=birthdate,
-            address=address,
+            address_1=address_1,
+            address_2=address_2,
+            post_code=post_code,
+            city=city,
+            state=state,
+            country=country,
             phone=phone,
             email=email
         )
@@ -46,19 +56,24 @@ def read_all_clients(db: Session) -> None:
 
 def read_client_by_id(db: Session) -> None:
     client_id: int = validate_integer_number("Digite o id do cliente: ")
-    client: Union[Client | None] = get_client(db, client_id)
+    client: Union[Client, None] = get_client(db, client_id)
 
     if client:
         print(
             f"\n# Dados do Cliente #\n"
             f"id: {client.id},\n"
-            f"name: {client.name},\n"
-            f"cpf: {client.cpf},\n"
-            f"birthdate: {client.birthdate},\n"
-            f"age: {client.age},\n"
-            f"address: {client.address},\n"
-            f"phone: {client.phone},\n"
-            f"email: {client.email}\n"
+            f"Nome: {client.name},\n"
+            f"CPF: {client.cpf},\n"
+            f"Data de Nascimento: {client.birthdate},\n"
+            f"Idade: {client.age},\n"
+            f"Endereço 1: {client.address_1},\n"
+            f"Endereço 2: {client.address_2 if client.address_2 else 'Não informado'},\n"
+            f"CEP: {client.post_code},\n"
+            f"Cidade: {client.city},\n"
+            f"Estado: {client.state},\n"
+            f"País: {client.country},\n"
+            f"Telefone: {client.phone},\n"
+            f"E-mail: {client.email}\n"
         )
     else:
         print(f"Cliente com ID {client_id} não encontrado.")
