@@ -117,12 +117,26 @@ def update_client_by_id(db: Session) -> None:
     if not client:
         return
 
-    client.name = input("Digite o nome do cliente: ")
-    client.email = input("Digite o e-mail do cliente: ")
-    client.phone = validate_phone(input("Digite o telefone do cliente (com o DDD): "))
+    try:
+        client.name = input("Digite o nome do cliente: ")
+        client.email = validate_email(input("Digite o e-mail do cliente: "))
+        client.phone = validate_phone(input("Digite o telefone do cliente (com o DDD): "))
 
-    update_client(db, client)
-    print(f"Cliente com ID {client.id} atualizado com sucesso!")
+        update_client(db, client)
+        print(f"Cliente com ID {client.id} atualizado com sucesso!")
+    
+    except IntegrityError as ie:
+        db.rollback()
+        if "client.email" in str(ie.orig):
+            print(f"Erro: O e-mail {client.email} já está cadastrado no sistema.")
+        else:
+            print(f"Erro de integridade no banco de dados: {ie}")
+    
+    except ValueError as ve:
+        print(f"Erro: {ve}")
+    
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
 
 
 def delete_client_by_id(db: Session) -> None:
