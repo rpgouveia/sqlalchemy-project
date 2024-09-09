@@ -8,6 +8,7 @@ def main() -> None:
 
     status: bool = True
     while (status):
+        print("Programa de Cadastro de Clientes")
         status = program_options(db)
 
     db.close()
