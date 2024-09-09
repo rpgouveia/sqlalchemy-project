@@ -16,6 +16,7 @@ from core.crud import (
     delete_client
 )
 from typing import List, Union, Optional
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from core.models import Client
 from datetime import date
@@ -52,6 +53,14 @@ def create_new_client(db: Session) -> None:
         created_client = create_client(db, new_client)
         print(f"Cliente criado com sucesso! ID: {created_client.id}")
 
+    except IntegrityError as ie:
+        db.rollback()
+        if "client.cpf" in str(ie.orig):
+            print(f"Erro: O CPF {cpf} já está cadastrado no sistema.")
+        elif "client.email" in str(ie.orig):
+            print(f"Erro: O e-mail {email} já está cadastrado no sistema.")
+        else:
+            print(f"Erro de integridade no banco de dados: {ie}")
     except ValueError as ve:
         print(f"Erro: {ve}")
     except Exception as e:
