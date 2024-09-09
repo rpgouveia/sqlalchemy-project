@@ -11,7 +11,7 @@ class Client(Base):
     __tablename__                 = "client"
     id: Mapped[int]               = mapped_column(primary_key=True)
     name: Mapped[str]             = mapped_column(String(255), nullable=False)
-    cpf: Mapped[str]              = mapped_column(String(11), nullable=False)
+    cpf: Mapped[str]              = mapped_column(String(11), nullable=False, unique=True)
     birthdate: Mapped[date]       = mapped_column(Date, nullable=False)
     address_1: Mapped[str]        = mapped_column(String(255), nullable=False)
     address_2: Mapped[str]        = mapped_column(String(255), nullable=True)
