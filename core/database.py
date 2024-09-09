@@ -3,10 +3,8 @@ from sqlalchemy.orm import sessionmaker, Session
 from core.models import Base
 
 
-# Setup SQLite Database
 engine: Engine = create_engine("sqlite:///insurance.db", echo=False)
 
-# Session Factory
 session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def connect_db() -> Session:

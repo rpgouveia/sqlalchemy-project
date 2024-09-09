@@ -15,7 +15,6 @@ def create_new_client(db: Session) -> None:
         phone: str = validate_phone(input("Digite o telefone do cliente (com DDD): "))
         email: str = validate_email(input("Digite o e-mail do cliente: "))
 
-        # Create object Client
         new_client: Client = Client(
             name=name,
             cpf=cpf,
@@ -25,7 +24,6 @@ def create_new_client(db: Session) -> None:
             email=email
         )
 
-        # Save to database
         created_client = create_client(db, new_client)
         print(f"Cliente criado com sucesso! ID: {created_client.id}")
 
@@ -80,12 +78,10 @@ def update_client_by_id(db: Session) -> None:
     if not client:
         return
 
-    # Update client information
     client.name = input("Digite o nome do cliente: ")
     client.email = input("Digite o e-mail do cliente: ")
     client.phone = validate_phone(input("Digite o telefone do cliente (com o DDD): "))
 
-    # Update the client in the database
     update_client(db, client)
     print(f"Cliente com ID {client.id} atualizado com sucesso!")
 
@@ -95,12 +91,10 @@ def delete_client_by_id(db: Session) -> None:
     if not client:
         return
 
-    # Confirm deletion
     confirmation: str = input(f"Tem certeza que deseja deletar o cliente com ID {client.id}? (s/n): ")
     if confirmation.lower() != 's':
         print("Cancelando a operação.")
         return
 
-    # Delete client
     delete_client(db, client.id)
     print("Cliente deletado com sucesso.")

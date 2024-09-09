@@ -10,10 +10,15 @@ class Base(DeclarativeBase):
 class Client(Base):
     __tablename__                 = "client"
     id: Mapped[int]               = mapped_column(primary_key=True)
-    name: Mapped[str]             = mapped_column(String(100), nullable=False)
+    name: Mapped[str]             = mapped_column(String(255), nullable=False)
     cpf: Mapped[str]              = mapped_column(String(11), nullable=False)
     birthdate: Mapped[date]       = mapped_column(Date, nullable=False)
-    address: Mapped[str]          = mapped_column(String(255), nullable=True)
+    address_1: Mapped[str]        = mapped_column(String(255), nullable=False)
+    address_2: Mapped[str]        = mapped_column(String(255), nullable=True)
+    post_code: Mapped[str]        = mapped_column(String(8), nullable=False)
+    city: Mapped[str]             = mapped_column(String(255), nullable=False)
+    state: Mapped[str]            = mapped_column(String(2), nullable=False)
+    country: Mapped[str]          = mapped_column(String(2), nullable=False)
     phone: Mapped[str]            = mapped_column(String(11), nullable=False)
     email: Mapped[str]            = mapped_column(String(255), nullable=False, unique=True)
 
@@ -21,6 +26,8 @@ class Client(Base):
     def age(self) -> int:
         today: date = date.today()
         age: int = today.year - self.birthdate.year
+        if today < self.birthdate.replace(year=today.year):
+            age -= 1
         return age
 
     def __repr__(self) -> str:
@@ -31,7 +38,12 @@ class Client(Base):
             f"  cpf: {self.cpf},\n"
             f"  birthdate: {self.birthdate},\n"
             f"  age: {self.age},\n"
-            f"  address: {self.address},\n"
+            f"  address_1: {self.address_1},\n"
+            f"  address_2: {self.address_2},\n"
+            f"  post_code: {self.post_code},\n"
+            f"  city: {self.city},\n"
+            f"  state: {self.state},\n"
+            f"  country: {self.country},\n"
             f"  phone: {self.phone},\n"
             f"  email: {self.email}\n"
             f")"
