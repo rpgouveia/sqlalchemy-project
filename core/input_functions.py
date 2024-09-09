@@ -1,4 +1,4 @@
-from core.validations import validate_cpf, validate_phone, validate_birthdate, validate_integer_number, validate_email
+from core.validations import validate_cpf, validate_phone, validate_birthdate, validate_integer_number, validate_email, validate_post_code, validate_country, validate_state
 from core.crud import create_client, get_all_clients, get_client, update_client, delete_client
 from sqlalchemy.orm import Session
 from core.models import Client
@@ -13,10 +13,10 @@ def create_new_client(db: Session) -> None:
         birthdate: date = validate_birthdate(input("Digite a data de nascimento do cliente (AAAA-MM-DD): "))
         address_1: str = input("Digite o endereço principal do cliente: ")
         address_2: Optional[str] = input("Digite o complemento do endereço (opcional): ") or None
-        post_code: str = input("Digite o CEP do cliente: ")
+        post_code: str = validate_post_code(input("Digite o CEP do cliente: "))
         city: str = input("Digite a cidade do cliente: ")
-        state: str = input("Digite a sigla do estado do cliente (Ex: PR): ")
-        country: str = input("Digite o código do país do cliente (Ex: BR): ")
+        state: str = validate_state(input("Digite a sigla do estado do cliente (Ex: PR): "))
+        country: str = validate_country(input("Digite o código do país do cliente (Ex: BR): "))
         phone: str = validate_phone(input("Digite o telefone do cliente (com DDD): "))
         email: str = validate_email(input("Digite o e-mail do cliente: "))
 

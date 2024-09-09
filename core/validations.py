@@ -39,3 +39,22 @@ def validate_email(email: str) -> str:
         raise ValueError("Email inválido. Por favor, digite um email válido.")
     return email
 
+
+def validate_post_code(post_code: str) -> str:
+    cleaned_post_code: str = re.sub(r'\D', '', post_code)
+    if not re.match(r"^\d{8}$", cleaned_post_code):
+        raise ValueError("CPF inválido. Deve conter 8 dígitos numéricos.")
+    return cleaned_post_code
+
+
+def validate_state(state: str) -> str:
+    if not re.match(r'^[A-Z]{2}$', state):
+        raise ValueError("A sigla do estado deve conter exatamente 2 letras maiúsculas.")
+    return state
+
+
+def validate_country(country: str) -> str:
+    if not re.match(r'^[A-Z]{2}$', country):
+        raise ValueError("O código do país deve conter exatamente 2 letras maiúsculas.")
+    return country
+
