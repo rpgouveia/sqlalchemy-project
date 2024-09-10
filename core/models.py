@@ -8,18 +8,18 @@ class Base(DeclarativeBase):
 
 
 class Client(Base):
-    __tablename__                 = "client"
-    name: Mapped[str]             = mapped_column(String(255), nullable=False)
-    cpf: Mapped[str]              = mapped_column(String(11), nullable=False, unique=True)
-    birthdate: Mapped[date]       = mapped_column(Date, nullable=False)
-    address_1: Mapped[str]        = mapped_column(String(255), nullable=False)
-    address_2: Mapped[str]        = mapped_column(String(255), nullable=True)
-    post_code: Mapped[str]        = mapped_column(String(8), nullable=False)
-    city: Mapped[str]             = mapped_column(String(255), nullable=False)
-    state: Mapped[str]            = mapped_column(String(2), nullable=False)
-    country: Mapped[str]          = mapped_column(String(2), nullable=False)
-    phone: Mapped[str]            = mapped_column(String(11), nullable=False)
-    email: Mapped[str]            = mapped_column(String(255), nullable=False, unique=True)
+    __tablename__           = "client"
+    name: Mapped[str]       = mapped_column(String(255), nullable=False)
+    cpf: Mapped[str]        = mapped_column(String(11), nullable=False, unique=True)
+    birthdate: Mapped[date] = mapped_column(Date, nullable=False)
+    address_1: Mapped[str]  = mapped_column(String(255), nullable=False)
+    address_2: Mapped[str]  = mapped_column(String(255), nullable=True)
+    post_code: Mapped[str]  = mapped_column(String(8), nullable=False)
+    city: Mapped[str]       = mapped_column(String(255), nullable=False)
+    state: Mapped[str]      = mapped_column(String(2), nullable=False)
+    country: Mapped[str]    = mapped_column(String(2), nullable=False)
+    phone: Mapped[str]      = mapped_column(String(11), nullable=False)
+    email: Mapped[str]      = mapped_column(String(255), nullable=False, unique=True)
 
     @property
     def age(self) -> int:
