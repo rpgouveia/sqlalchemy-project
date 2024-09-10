@@ -1,15 +1,14 @@
-from sqlalchemy import String, Date
+from sqlalchemy import Integer, String, Date
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from datetime import date
 
 
 class Base(DeclarativeBase):
-    pass
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
 
 class Client(Base):
     __tablename__                 = "client"
-    id: Mapped[int]               = mapped_column(primary_key=True)
     name: Mapped[str]             = mapped_column(String(255), nullable=False)
     cpf: Mapped[str]              = mapped_column(String(11), nullable=False, unique=True)
     birthdate: Mapped[date]       = mapped_column(Date, nullable=False)
