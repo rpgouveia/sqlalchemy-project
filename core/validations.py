@@ -43,7 +43,7 @@ def validate_email(email: str) -> str:
 def validate_post_code(post_code: str) -> str:
     cleaned_post_code: str = re.sub(r'\D', '', post_code)
     if not re.match(r"^\d{8}$", cleaned_post_code):
-        raise ValueError("CPF inválido. Deve conter 8 dígitos numéricos.")
+        raise ValueError("CEP inválido. Deve conter 8 dígitos numéricos.")
     return cleaned_post_code
 
 
