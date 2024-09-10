@@ -97,7 +97,7 @@ def read_client_by_id(db: Session) -> None:
             f"Data de Nascimento: {client.birthdate}\n"
             f"Idade: {client.age}\n"
             f"Endereço 1: {client.address_1}\n"
-            f"Endereço 2: {client.address_2 if client.address_2 else 'Não informado'}\n"
+            f"Endereço 2: {client.address_2 or 'Não informado'}\n"
             f"CEP: {client.post_code}\n"
             f"Cidade: {client.city}\n"
             f"Estado: {client.state}\n"
@@ -136,7 +136,7 @@ def update_client_by_id(db: Session) -> None:
     except IntegrityError as ie:
         db.rollback()
         if "client.email" in str(ie.orig):
-            print(f"Erro: O e-mail {client.email} já está cadastrado no sistema.")
+            print(f"Erro: O e-mail {client.email} já está cadastrado.")
         else:
             print(f"Erro de integridade no banco de dados: {ie}")
     
