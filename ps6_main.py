@@ -1,11 +1,21 @@
 import sys
+from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QStackedWidget
-from PySide6.QtCore import Qt
+from sqlalchemy.orm import Session
+from core.database import connect_db
+
 
 class MainWindowApp(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("Programa de Cadastro de Clientes")
+
+        # Conexão ao banco de dados
+        try:
+            self.db: Session = connect_db()
+        except Exception as e:
+            print(f"Erro ao conectar ao banco de dados: {e}")
+            self.db = None
 
         # Configuração do layout principal
         self.layout = QVBoxLayout()
@@ -21,6 +31,12 @@ class MainWindowApp(QWidget):
 
         # Definir o layout da janela principal
         self.setLayout(self.layout)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        """Sobrescreve o evento de fechamento para garantir que o banco seja desconectado"""
+        if self.db:
+            self.db.close()
+        event.accept()
 
     def create_main_menu(self):
         """Cria o menu principal com botões para diferentes funcionalidades"""
