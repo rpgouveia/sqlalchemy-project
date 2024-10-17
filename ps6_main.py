@@ -162,7 +162,6 @@ class MainWindowApp(QWidget):
         self.phone_input.clear()
         self.email_input.clear()
 
-
     def save_client(self):
         """Salva o cliente no banco de dados após validar os dados"""
         try:
