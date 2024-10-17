@@ -7,16 +7,6 @@ class MainWindowApp(QWidget):
         super().__init__()
         self.setWindowTitle("Programa de Cadastro de Clientes")
 
-        # Sketch for Main Menu
-        """
-        1 - Cadastrar um novo cliente
-        2 - Listar todos os clientes
-        3 - Ler um cliente por ID
-        4 - Atualizar um cliente por ID
-        5 - Deletar um cliente por ID
-        6 - Sair do programa
-        """
-
         # Configuração do layout principal
         self.layout = QVBoxLayout()
 
@@ -26,7 +16,7 @@ class MainWindowApp(QWidget):
 
         # Criar as páginas (Menu Principal e as demais opções)
         self.create_main_menu()
-        self.create_cadastro_cliente_page()
+        self.create_register_client_page()
         self.create_hello_world_page()
 
         # Definir o layout da janela principal
@@ -34,41 +24,52 @@ class MainWindowApp(QWidget):
 
     def create_main_menu(self):
         """Cria o menu principal com botões para diferentes funcionalidades"""
+
+        # Rascunho do Menu Principal
+        """
+        1 - Cadastrar um novo cliente
+        2 - Listar todos os clientes
+        3 - Ler um cliente por ID
+        4 - Atualizar um cliente por ID
+        5 - Deletar um cliente por ID
+        6 - Sair do programa
+        """
+
         main_menu = QWidget()
         layout = QVBoxLayout()
 
-        # Botões do menu
-        cadastro_button = QPushButton("Cadastrar um novo cliente")
+        # Botões do menu principal
+        register_button = QPushButton("Cadastrar um novo cliente")
         hello_world_button = QPushButton("Hello World (teste)")
-        sair_button = QPushButton("Sair do programa")
+        exit_button = QPushButton("Sair do programa")
 
         # Conectando os botões às funções que alteram as páginas
-        cadastro_button.clicked.connect(self.show_cadastro_cliente_page)
+        register_button.clicked.connect(self.show_register_client_page)
         hello_world_button.clicked.connect(self.show_hello_world_page)
-        sair_button.clicked.connect(self.close)
+        exit_button.clicked.connect(self.close)
 
         # Adicionando os botões ao layout
-        layout.addWidget(cadastro_button)
+        layout.addWidget(register_button)
         layout.addWidget(hello_world_button)
-        layout.addWidget(sair_button)
+        layout.addWidget(exit_button)
 
         main_menu.setLayout(layout)
         self.stacked_widget.addWidget(main_menu)
 
-    def create_cadastro_cliente_page(self):
+    def create_register_client_page(self):
         """Cria a página de cadastro de cliente"""
-        cadastro_page = QWidget()
+        register_page = QWidget()
         layout = QVBoxLayout()
 
         label = QLabel("Página de Cadastro de Cliente")
-        voltar_button = QPushButton("Voltar para o Menu")
-        voltar_button.clicked.connect(self.show_main_menu)
+        return_button = QPushButton("Voltar para o Menu")
+        return_button.clicked.connect(self.show_main_menu)
 
         layout.addWidget(label)
-        layout.addWidget(voltar_button)
+        layout.addWidget(return_button)
 
-        cadastro_page.setLayout(layout)
-        self.stacked_widget.addWidget(cadastro_page)
+        register_page.setLayout(layout)
+        self.stacked_widget.addWidget(register_page)
 
     def create_hello_world_page(self):
         """Cria a página de Hello World"""
@@ -76,11 +77,11 @@ class MainWindowApp(QWidget):
         layout = QVBoxLayout()
 
         label = QLabel("Hello World!")
-        voltar_button = QPushButton("Voltar para o Menu")
-        voltar_button.clicked.connect(self.show_main_menu)
+        return_button = QPushButton("Voltar para o Menu")
+        return_button.clicked.connect(self.show_main_menu)
 
         layout.addWidget(label)
-        layout.addWidget(voltar_button)
+        layout.addWidget(return_button)
 
         hello_page.setLayout(layout)
         self.stacked_widget.addWidget(hello_page)
@@ -89,7 +90,7 @@ class MainWindowApp(QWidget):
         """Exibe o menu principal"""
         self.stacked_widget.setCurrentIndex(0)
 
-    def show_cadastro_cliente_page(self):
+    def show_register_client_page(self):
         """Exibe a página de cadastro de cliente"""
         self.stacked_widget.setCurrentIndex(1)
 
