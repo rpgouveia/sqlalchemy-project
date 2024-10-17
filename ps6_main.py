@@ -1,8 +1,34 @@
 import sys
 from PySide6.QtGui import QCloseEvent
-from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout, QStackedWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QWidget,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QStackedWidget,
+    QLineEdit,
+    QDateEdit,
+    QFormLayout,
+    QMessageBox,
+)
+from core.validations import (
+    validate_cpf,
+    validate_phone,
+    validate_birthdate,
+    validate_email,
+    validate_post_code,
+    validate_country,
+    validate_state,
+)
+from PySide6.QtCore import QDate
 from sqlalchemy.orm import Session
 from core.database import connect_db
+from core.crud import create_client
+from core.models import Client
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
+from datetime import date
 
 
 class MainWindowApp(QWidget):
@@ -76,16 +102,127 @@ class MainWindowApp(QWidget):
         """Cria a página de cadastro de cliente"""
         register_page = QWidget()
         layout = QVBoxLayout()
+        form_layout = QFormLayout()
 
-        label = QLabel("Página de Cadastro de Cliente")
+        # Criando os campos de entrada (QLineEdit, QDateEdit, etc.)
+        self.name_input = QLineEdit()
+        self.cpf_input = QLineEdit()
+        self.birthdate_input = QDateEdit()
+        self.birthdate_input.setCalendarPopup(True)  # Permite escolher a data
+        self.birthdate_input.setDate(QDate.currentDate())  # Data padrão
+        self.address_1_input = QLineEdit()
+        self.address_2_input = QLineEdit()
+        self.post_code_input = QLineEdit()
+        self.city_input = QLineEdit()
+        self.state_input = QLineEdit()
+        self.country_input = QLineEdit()
+        self.phone_input = QLineEdit()
+        self.email_input = QLineEdit()
+
+        # Adicionando campos ao layout de formulário
+        form_layout.addRow("Nome Completo:", self.name_input)
+        form_layout.addRow("CPF:", self.cpf_input)
+        form_layout.addRow("Data de Nascimento:", self.birthdate_input)
+        form_layout.addRow("Endereço Principal:", self.address_1_input)
+        form_layout.addRow("Complemento:", self.address_2_input)
+        form_layout.addRow("CEP:", self.post_code_input)
+        form_layout.addRow("Cidade:", self.city_input)
+        form_layout.addRow("Estado (Ex: PR):", self.state_input)
+        form_layout.addRow("País (Ex: BR):", self.country_input)
+        form_layout.addRow("Telefone (com DDD):", self.phone_input)
+        form_layout.addRow("Email:", self.email_input)
+
+        # Botão para salvar o cliente
+        submit_button = QPushButton("Cadastrar Cliente")
+        submit_button.clicked.connect(self.save_client)
+
+        # Botão para voltar ao menu
         return_button = QPushButton("Voltar para o Menu")
         return_button.clicked.connect(self.show_main_menu)
 
-        layout.addWidget(label)
+        # Construindo o Layout da Página
+        layout.addLayout(form_layout)
+        layout.addWidget(submit_button)
         layout.addWidget(return_button)
 
         register_page.setLayout(layout)
         self.stacked_widget.addWidget(register_page)
+
+    def clear_fields(self):
+        """Limpa os campos de entrada do formulário"""
+        self.name_input.clear()
+        self.cpf_input.clear()
+        self.birthdate_input.clear()
+        self.address_1_input.clear()
+        self.address_2_input.clear()
+        self.post_code_input.clear()
+        self.city_input.clear()
+        self.state_input.clear()
+        self.country_input.clear()
+        self.phone_input.clear()
+        self.email_input.clear()
+
+
+    def save_client(self):
+        """Salva o cliente no banco de dados após validar os dados"""
+        try:
+            # Capturar dados dos campos
+            name = self.name_input.text()
+            cpf = validate_cpf(self.cpf_input.text())
+            birthdate = validate_birthdate(
+                self.birthdate_input.date().toString("yyyy-MM-dd")
+            )
+            address_1 = self.address_1_input.text()
+            address_2 = self.address_2_input.text() or None
+            post_code = validate_post_code(self.post_code_input.text())
+            city = self.city_input.text()
+            state = validate_state(self.state_input.text())
+            country = validate_country(self.country_input.text())
+            phone = validate_phone(self.phone_input.text())
+            email = validate_email(self.email_input.text())
+
+            # Criando o novo objeto Client
+            new_client = Client(
+                name=name,
+                cpf=cpf,
+                birthdate=birthdate,
+                address_1=address_1,
+                address_2=address_2,
+                post_code=post_code,
+                city=city,
+                state=state,
+                country=country,
+                phone=phone,
+                email=email,
+            )
+
+            # Salvar no banco de dados
+            create_client(self.db, new_client)
+            QMessageBox.information(self, "Sucesso", "Cliente cadastrado com sucesso!")
+
+            # Limpa os campos após cadastro
+            self.clear_fields()
+
+        except IntegrityError as ie:
+            self.db.rollback()
+            if "client.cpf" in str(ie.orig):
+                QMessageBox.warning(
+                    self, "Erro", f"O CPF {cpf} já está cadastrado no sistema."
+                )
+            elif "client.email" in str(ie.orig):
+                QMessageBox.warning(
+                    self, "Erro", f"O e-mail {email} já está cadastrado no sistema."
+                )
+            else:
+                QMessageBox.critical(
+                    self, "Erro", f"Erro de integridade no banco de dados: {ie}"
+                )
+        except ValueError as ve:
+            QMessageBox.warning(self, "Erro de Validação", f"Erro: {ve}")
+        except Exception as e:
+            QMessageBox.critical(
+                self, "Erro Inesperado", f"Ocorreu um erro inesperado: {e}"
+            )
 
     def create_hello_world_page(self):
         """Cria a página de Hello World"""
@@ -114,6 +251,7 @@ class MainWindowApp(QWidget):
         """Exibe a página de Hello World"""
         self.stacked_widget.setCurrentIndex(2)
 
+
 # Startup Application
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -123,4 +261,3 @@ if __name__ == "__main__":
     window.show()
 
     sys.exit(app.exec())
-
