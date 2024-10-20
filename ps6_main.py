@@ -95,6 +95,7 @@ class MainWindowApp(QWidget):
         layout.addWidget(hello_world_button)
         layout.addWidget(exit_button)
 
+        # Definindo Layout do menu principal
         main_menu.setLayout(layout)
         self.stacked_widget.addWidget(main_menu)
 
@@ -134,7 +135,7 @@ class MainWindowApp(QWidget):
 
         # Botão para salvar o cliente
         submit_button = QPushButton("Cadastrar Cliente")
-        submit_button.clicked.connect(self.save_client)
+        submit_button.clicked.connect(self.save_new_client)
 
         # Botão para voltar ao menu
         return_button = QPushButton("Voltar para o Menu")
@@ -145,6 +146,7 @@ class MainWindowApp(QWidget):
         layout.addWidget(submit_button)
         layout.addWidget(return_button)
 
+        # Definindo Layout da Página
         register_page.setLayout(layout)
         self.stacked_widget.addWidget(register_page)
 
@@ -162,7 +164,7 @@ class MainWindowApp(QWidget):
         self.phone_input.clear()
         self.email_input.clear()
 
-    def save_client(self):
+    def save_new_client(self):
         """Salva o cliente no banco de dados após validar os dados"""
         try:
             # Capturar dados dos campos
