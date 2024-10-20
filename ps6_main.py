@@ -28,7 +28,7 @@ from core.validations import (
 from PySide6.QtCore import QDate, Qt
 from sqlalchemy.orm import Session
 from core.database import connect_db
-from core.crud import create_client, get_all_clients, get_client
+from core.crud import create_client, get_all_clients, get_client, update_client
 from core.models import Client
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -383,7 +383,7 @@ class MainWindowApp(QWidget):
             self.result_label.setText("")
 
     def update_client_data_page(self):
-        """Cria a página de busca e exibição de cliente pelo ID"""
+        """Cria a página de atualização de cliente pelo ID"""
         # Cria o widget da página
         update_page = QWidget()
         layout = QVBoxLayout()
@@ -392,28 +392,27 @@ class MainWindowApp(QWidget):
         label = QLabel("Atualizar dados do Cliente por ID")
         layout.addWidget(label, alignment=Qt.AlignTop)
 
-        # Cria um layout horizontal para buscar cliente por ID
+        # Cria um layout horizontal
         search_id_layout = QHBoxLayout()
 
         # Entrada do ID do cliente
         search_id_label = QLabel("Digite o ID do Cliente:")
         search_id_layout.addWidget(search_id_label)
-        
         # Campo de entrada para busca do ID
-        self.id_input = QLineEdit()
-        self.id_input.setFixedWidth(50)
-        search_id_layout.addWidget(self.id_input)
+        self.id_input_update = QLineEdit()
+        self.id_input_update.setFixedWidth(50)
+        search_id_layout.addWidget(self.id_input_update)
 
         # Botão para buscar cliente
         search_button = QPushButton("Buscar Cliente")
         search_button.setFixedWidth(100)
-        search_button.clicked.connect(self.search_client)  # Buscar o cliente pelo ID
+        search_button.clicked.connect(self.search_client_for_update)
         search_id_layout.addWidget(search_button)
 
-        # Adiciona o layout horizontal ao layout principal
+        # Adiciona o layout horizontal ao layout da janela
         layout.addLayout(search_id_layout)
 
-        # Campos para exibir e editar dados do cliente
+        # Campos editáveis para os dados do cliente
         self.name_input = QLineEdit()
         self.email_input = QLineEdit()
         self.phone_input = QLineEdit()
@@ -427,15 +426,14 @@ class MainWindowApp(QWidget):
         layout.addWidget(QLabel("Telefone:"))
         layout.addWidget(self.phone_input)
 
-        # Botão para atualizar o cliente
-        update_button = QPushButton("Atualizar Cliente")
-        update_button.setFixedWidth(150)
-        update_button.clicked.connect(self.update_client)  # Função de atualização
-        layout.addWidget(update_button)
+        # Botão para salvar as alterações
+        save_button = QPushButton("Salvar Alterações")
+        save_button.clicked.connect(self.update_client_data)
+        layout.addWidget(save_button)
 
-        # Label para mostrar o resultado
-        self.result_label = QLabel()
-        layout.addWidget(self.result_label)
+        # Label para feedback de status
+        self.result_label_update = QLabel()
+        layout.addWidget(self.result_label_update)
 
         # Botão para voltar ao menu principal
         return_button = QPushButton("Voltar para o Menu")
@@ -446,47 +444,55 @@ class MainWindowApp(QWidget):
         update_page.setLayout(layout)
         self.stacked_widget.addWidget(update_page)
 
-    def update_client(self):
-        client_id = self.id_input.text()
+    def search_client_for_update(self):
+        """Função para buscar cliente no banco de dados pelo ID inserido (para atualização)"""
+        client_id = self.id_input_update.text().strip()
 
         if not client_id.isdigit():
-            self.result_label.setText("ID inválido.")
+            QMessageBox.warning(self.stacked_widget, "Erro", "Por favor, insira um ID válido.")
             return
 
-        name = self.name_input.text()
-        email = self.email_input.text()
-        phone = self.phone_input.text()
+        client = get_client(self.db, int(client_id))
 
-        try:
-            # Validações dos dados (se necessário)
-            email = validate_email(email)
-            phone = validate_phone(phone)
+        if client:
+            # Preenche os campos editáveis com os dados do cliente
+            self.name_input.setText(client.name)
+            self.email_input.setText(client.email)
+            self.phone_input.setText(client.phone)
+            self.result_label_update.setText(f"Cliente com ID {client_id} carregado para atualização.")
+        else:
+            QMessageBox.warning(self.stacked_widget, "Erro", f"Cliente com ID {client_id} não encontrado.")
+            self.result_label_update.setText("")
 
-            # Atualizar cliente no banco de dados
-            with Session(engine) as session:
-                client = session.query(Client).get(int(client_id))
-                if client:
-                    client.name = name
-                    client.email = email
-                    client.phone = phone
+    def update_client_data(self):
+        """Função para salvar as alterações no banco de dados"""
+        client_id = self.id_input_update.text().strip()
 
-                    session.commit()
-                    session.refresh(client)
-                    self.result_label.setText(f"Cliente {client.name} atualizado com sucesso!")
+        if not client_id.isdigit():
+            QMessageBox.warning(self.stacked_widget, "Erro", "ID inválido.")
+            return
+
+        client = get_client(self.db, int(client_id))
+
+        if client:
+            # Atualiza os dados do cliente com base no input
+            client.name = self.name_input.text().strip()
+            client.email = self.email_input.text().strip()
+            client.phone = self.phone_input.text().strip()
+
+            try:
+                update_client(self.db, client)  # Atualiza o cliente no banco de dados
+                self.result_label_update.setText(f"Cliente com ID {client.id} atualizado com sucesso!")
+            except IntegrityError as ie:
+                self.db.rollback()
+                if "client.email" in str(ie.orig):
+                    self.result_label_update.setText(f"Erro: O e-mail {client.email} já está cadastrado.")
                 else:
-                    self.result_label.setText("Cliente não encontrado.")
-
-        except IntegrityError as ie:
-            if "client.email" in str(ie.orig):
-                self.result_label.setText(f"Erro: O e-mail {email} já está cadastrado.")
-            else:
-                self.result_label.setText(f"Erro de integridade no banco de dados: {ie}")
-
-        except ValueError as ve:
-            self.result_label.setText(f"Erro: {ve}")
-
-        except Exception as e:
-            self.result_label.setText(f"Ocorreu um erro inesperado: {e}")
+                    self.result_label_update.setText(f"Erro de integridade no banco de dados: {ie}")
+            except Exception as e:
+                self.result_label_update.setText(f"Ocorreu um erro: {e}")
+        else:
+            self.result_label_update.setText(f"Cliente com ID {client_id} não encontrado.")
 
     def show_main_menu(self):
         """Exibe o menu principal"""
