@@ -11,6 +11,8 @@ from PySide6.QtWidgets import (
     QDateEdit,
     QFormLayout,
     QMessageBox,
+    QTableWidget,
+    QTableWidgetItem
 )
 from core.validations import (
     validate_cpf,
@@ -24,11 +26,10 @@ from core.validations import (
 from PySide6.QtCore import QDate
 from sqlalchemy.orm import Session
 from core.database import connect_db
-from core.crud import create_client
+from core.crud import create_client, get_all_clients
 from core.models import Client
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from datetime import date
 
 
 class MainWindowApp(QWidget):
@@ -53,7 +54,7 @@ class MainWindowApp(QWidget):
         # Criar as páginas (Menu Principal e as demais opções)
         self.create_main_menu()
         self.create_register_client_page()
-        self.create_hello_world_page()
+        self.list_all_clients_page()
 
         # Definir o layout da janela principal
         self.setLayout(self.layout)
@@ -82,17 +83,17 @@ class MainWindowApp(QWidget):
 
         # Botões do menu principal
         register_button = QPushButton("Cadastrar um novo cliente")
-        hello_world_button = QPushButton("Hello World (teste)")
+        list_all_clients_button = QPushButton("Listar todos os clientes")
         exit_button = QPushButton("Sair do programa")
 
         # Conectando os botões às funções que alteram as páginas
         register_button.clicked.connect(self.show_register_client_page)
-        hello_world_button.clicked.connect(self.show_hello_world_page)
+        list_all_clients_button.clicked.connect(self.show_list_clients_page)
         exit_button.clicked.connect(self.close)
 
         # Adicionando os botões ao layout
         layout.addWidget(register_button)
-        layout.addWidget(hello_world_button)
+        layout.addWidget(list_all_clients_button)
         layout.addWidget(exit_button)
 
         # Definindo Layout do menu principal
@@ -225,20 +226,47 @@ class MainWindowApp(QWidget):
                 self, "Erro Inesperado", f"Ocorreu um erro inesperado: {e}"
             )
 
-    def create_hello_world_page(self):
-        """Cria a página de Hello World"""
-        hello_page = QWidget()
+    def list_all_clients_page(self):
+        """Cria a página de listagem de clientes"""
+        # Cria o widget da página
+        list_page = QWidget()
         layout = QVBoxLayout()
 
-        label = QLabel("Hello World!")
+        # Título
+        label = QLabel("Lista de Clientes")
+
+        # Cria a tabela para exibir os clientes
+        table = QTableWidget()
+        table.setColumnCount(6)  # Número de colunas
+        table.setHorizontalHeaderLabels(["ID", "Nome", "CPF", "Idade", "Cidade", "Email"])
+
+        # Função para buscar todos os clientes no banco de dados
+        clients = get_all_clients(self.db)
+
+        # Define o número de linhas com base no número de clientes
+        table.setRowCount(len(clients))
+
+        # Popula a tabela com os dados dos clientes
+        for row, client in enumerate(clients):
+            table.setItem(row, 0, QTableWidgetItem(str(client.id)))
+            table.setItem(row, 1, QTableWidgetItem(client.name))
+            table.setItem(row, 2, QTableWidgetItem(client.cpf))
+            table.setItem(row, 3, QTableWidgetItem(str(client.age)))
+            table.setItem(row, 4, QTableWidgetItem(client.city))
+            table.setItem(row, 5, QTableWidgetItem(client.email))
+
+        # Botão para voltar ao menu principal
         return_button = QPushButton("Voltar para o Menu")
         return_button.clicked.connect(self.show_main_menu)
 
+        # Adiciona os widgets ao layout
         layout.addWidget(label)
+        layout.addWidget(table)
         layout.addWidget(return_button)
 
-        hello_page.setLayout(layout)
-        self.stacked_widget.addWidget(hello_page)
+        # Configura o layout da página
+        list_page.setLayout(layout)
+        self.stacked_widget.addWidget(list_page)
 
     def show_main_menu(self):
         """Exibe o menu principal"""
@@ -248,8 +276,8 @@ class MainWindowApp(QWidget):
         """Exibe a página de cadastro de cliente"""
         self.stacked_widget.setCurrentIndex(1)
 
-    def show_hello_world_page(self):
-        """Exibe a página de Hello World"""
+    def show_list_clients_page(self):
+        """Exibe a página de listagem de clientes"""
         self.stacked_widget.setCurrentIndex(2)
 
 
@@ -258,7 +286,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     window = MainWindowApp()
-    window.resize(600, 400)
+    window.resize(800, 600)
     window.show()
 
     sys.exit(app.exec())
