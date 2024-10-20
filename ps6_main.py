@@ -243,11 +243,11 @@ class MainWindowApp(QWidget):
 
         # Definindo uma largura mínima para as colunas
         table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)  # ID
-        table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)  # Nome
+        table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)           # Nome
         table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)  # CPF
         table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Idade
-        table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)  # Cidade
-        table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)  # Email
+        table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)           # Cidade
+        table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)           # Email
         # Ordenação
         table.setSortingEnabled(True)
 
