@@ -5,6 +5,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QLabel,
     QPushButton,
+    QHBoxLayout,
     QVBoxLayout,
     QStackedWidget,
     QLineEdit,
@@ -309,15 +310,21 @@ class MainWindowApp(QWidget):
         layout = QVBoxLayout()
 
         # Título
-        label = QLabel("Buscar Cliente por ID")
-        layout.addWidget(label)
+        label = QLabel("Visualizar dados do Cliente por ID")
+        layout.addWidget(label, alignment=Qt.AlignTop)
+
+        # Cria um layout horizontal para o ID e o campo de entrada
+        id_layout = QHBoxLayout()
 
         # Entrada do ID do cliente
         id_label = QLabel("Digite o ID do Cliente:")
-        layout.addWidget(id_label)
-
+        id_layout.addWidget(id_label)
         self.id_input = QLineEdit()
-        layout.addWidget(self.id_input)
+        self.id_input.setFixedWidth(50)  # Define a largura do campo de entrada
+        id_layout.addWidget(self.id_input)
+
+        # Adiciona o layout de ID ao layout principal
+        layout.addLayout(id_layout)
 
         # Botão para buscar cliente
         search_button = QPushButton("Buscar Cliente")
