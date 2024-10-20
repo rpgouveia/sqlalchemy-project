@@ -27,7 +27,7 @@ from core.validations import (
 from PySide6.QtCore import QDate, Qt
 from sqlalchemy.orm import Session
 from core.database import connect_db
-from core.crud import create_client, get_all_clients
+from core.crud import create_client, get_all_clients, get_client
 from core.models import Client
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -56,6 +56,7 @@ class MainWindowApp(QWidget):
         self.create_main_menu()
         self.create_register_client_page()
         self.list_all_clients_page()
+        self.retrieve_client_data_page()
 
         # Definir o layout da janela principal
         self.setLayout(self.layout)
@@ -85,16 +86,19 @@ class MainWindowApp(QWidget):
         # Botões do menu principal
         register_button = QPushButton("Cadastrar um novo cliente")
         list_all_clients_button = QPushButton("Listar todos os clientes")
+        retrieve_client_button = QPushButton("Visualizar dados de um cliente")
         exit_button = QPushButton("Sair do programa")
 
         # Conectando os botões às funções que alteram as páginas
         register_button.clicked.connect(self.show_register_client_page)
         list_all_clients_button.clicked.connect(self.show_list_clients_page)
+        retrieve_client_button.clicked.connect(self.show_retrieve_client_data_page)
         exit_button.clicked.connect(self.close)
 
         # Adicionando os botões ao layout
         layout.addWidget(register_button)
         layout.addWidget(list_all_clients_button)
+        layout.addWidget(retrieve_client_button)
         layout.addWidget(exit_button)
 
         # Definindo Layout do menu principal
@@ -298,6 +302,73 @@ class MainWindowApp(QWidget):
         list_page.setLayout(layout)
         self.stacked_widget.addWidget(list_page)
 
+    def retrieve_client_data_page(self):
+        """Cria a página de busca e exibição de cliente pelo ID"""
+        # Cria o widget da página
+        retrieve_page = QWidget()
+        layout = QVBoxLayout()
+
+        # Título
+        label = QLabel("Buscar Cliente por ID")
+        layout.addWidget(label)
+
+        # Entrada do ID do cliente
+        id_label = QLabel("Digite o ID do Cliente:")
+        layout.addWidget(id_label)
+
+        self.id_input = QLineEdit()
+        layout.addWidget(self.id_input)
+
+        # Botão para buscar cliente
+        search_button = QPushButton("Buscar Cliente")
+        search_button.clicked.connect(self.search_client)
+        layout.addWidget(search_button)
+
+        # Label para exibir os dados do cliente
+        self.result_label = QLabel()
+        layout.addWidget(self.result_label)
+
+        # Botão para voltar ao menu principal
+        return_button = QPushButton("Voltar para o Menu")
+        return_button.clicked.connect(self.show_main_menu)
+        layout.addWidget(return_button)
+
+        # Configura o layout da página
+        retrieve_page.setLayout(layout)
+        self.stacked_widget.addWidget(retrieve_page)
+
+    def search_client(self):
+        """Função para buscar cliente no banco de dados pelo ID inserido"""
+        client_id = self.id_input.text().strip()
+
+        if not client_id.isdigit():
+            QMessageBox.warning(self.stacked_widget, "Erro", "Por favor, insira um ID válido.")
+            return
+
+        client = get_client(self.db, int(client_id))
+
+        if client:
+            # Exibe os dados do cliente
+            client_data = (
+                f"ID: {client.id}\n"
+                f"Nome: {client.name}\n"
+                f"CPF: {client.cpf}\n"
+                f"Data de Nascimento: {client.birthdate}\n"
+                f"Idade: {client.age}\n"
+                f"Endereço 1: {client.address_1}\n"
+                f"Endereço 2: {client.address_2 or 'Não informado'}\n"
+                f"CEP: {client.post_code}\n"
+                f"Cidade: {client.city}\n"
+                f"Estado: {client.state}\n"
+                f"País: {client.country}\n"
+                f"Telefone: {client.phone}\n"
+                f"E-mail: {client.email}"
+            )
+            self.result_label.setText(client_data)
+        else:
+            QMessageBox.warning(self.stacked_widget, "Erro", f"Cliente com ID {client_id} não encontrado.")
+            self.result_label.setText("")
+
     def show_main_menu(self):
         """Exibe o menu principal"""
         self.stacked_widget.setCurrentIndex(0)
@@ -310,6 +381,9 @@ class MainWindowApp(QWidget):
         """Exibe a página de listagem de clientes"""
         self.stacked_widget.setCurrentIndex(2)
 
+    def show_retrieve_client_data_page(self):
+        """Exibe a página de dados do cliente"""
+        self.stacked_widget.setCurrentIndex(3)
 
 # Startup Application
 if __name__ == "__main__":
