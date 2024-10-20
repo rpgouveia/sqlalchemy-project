@@ -12,7 +12,8 @@ from PySide6.QtWidgets import (
     QFormLayout,
     QMessageBox,
     QTableWidget,
-    QTableWidgetItem
+    QTableWidgetItem,
+    QHeaderView
 )
 from core.validations import (
     validate_cpf,
@@ -23,7 +24,7 @@ from core.validations import (
     validate_country,
     validate_state,
 )
-from PySide6.QtCore import QDate
+from PySide6.QtCore import QDate, Qt
 from sqlalchemy.orm import Session
 from core.database import connect_db
 from core.crud import create_client, get_all_clients
@@ -240,6 +241,16 @@ class MainWindowApp(QWidget):
         table.setColumnCount(6)  # Número de colunas
         table.setHorizontalHeaderLabels(["ID", "Nome", "CPF", "Idade", "Cidade", "Email"])
 
+        # Definindo uma largura mínima para as colunas
+        table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)  # ID
+        table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)  # Nome
+        table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)  # CPF
+        table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Idade
+        table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)  # Cidade
+        table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)  # Email
+        # Ordenação
+        table.setSortingEnabled(True)
+
         # Função para buscar todos os clientes no banco de dados
         clients = get_all_clients(self.db)
 
@@ -248,12 +259,31 @@ class MainWindowApp(QWidget):
 
         # Popula a tabela com os dados dos clientes
         for row, client in enumerate(clients):
-            table.setItem(row, 0, QTableWidgetItem(str(client.id)))
-            table.setItem(row, 1, QTableWidgetItem(client.name))
-            table.setItem(row, 2, QTableWidgetItem(client.cpf))
-            table.setItem(row, 3, QTableWidgetItem(str(client.age)))
-            table.setItem(row, 4, QTableWidgetItem(client.city))
-            table.setItem(row, 5, QTableWidgetItem(client.email))
+            id_item = QTableWidgetItem(str(client.id))
+            id_item.setTextAlignment(Qt.AlignCenter)
+
+            name_item = QTableWidgetItem(client.name)
+            name_item.setTextAlignment(Qt.AlignCenter)
+
+            cpf_item = QTableWidgetItem(client.cpf)
+            cpf_item.setTextAlignment(Qt.AlignCenter)
+
+            age_item = QTableWidgetItem(str(client.age))
+            age_item.setTextAlignment(Qt.AlignCenter)
+
+            city_item = QTableWidgetItem(client.city)
+            city_item.setTextAlignment(Qt.AlignCenter)
+
+            email_item = QTableWidgetItem(client.email)
+            email_item.setTextAlignment(Qt.AlignCenter)
+
+            # Adiciona os itens à tabela
+            table.setItem(row, 0, id_item)
+            table.setItem(row, 1, name_item)
+            table.setItem(row, 2, cpf_item)
+            table.setItem(row, 3, age_item)
+            table.setItem(row, 4, city_item)
+            table.setItem(row, 5, email_item)
 
         # Botão para voltar ao menu principal
         return_button = QPushButton("Voltar para o Menu")
