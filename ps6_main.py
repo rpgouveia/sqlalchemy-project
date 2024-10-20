@@ -58,6 +58,7 @@ class MainWindowApp(QWidget):
         self.create_register_client_page()
         self.list_all_clients_page()
         self.retrieve_client_data_page()
+        self.update_client_data_page()
 
         # Definir o layout da janela principal
         self.setLayout(self.layout)
@@ -88,18 +89,21 @@ class MainWindowApp(QWidget):
         register_button = QPushButton("Cadastrar um novo cliente")
         list_all_clients_button = QPushButton("Listar todos os clientes")
         retrieve_client_button = QPushButton("Visualizar dados de um cliente")
+        update_client_button = QPushButton("Atualizar dados de um cliente")
         exit_button = QPushButton("Sair do programa")
 
         # Conectando os botões às funções que alteram as páginas
         register_button.clicked.connect(self.show_register_client_page)
         list_all_clients_button.clicked.connect(self.show_list_clients_page)
         retrieve_client_button.clicked.connect(self.show_retrieve_client_data_page)
+        update_client_button.clicked.connect(self.show_update_client_data_page)
         exit_button.clicked.connect(self.close)
 
         # Adicionando os botões ao layout
         layout.addWidget(register_button)
         layout.addWidget(list_all_clients_button)
         layout.addWidget(retrieve_client_button)
+        layout.addWidget(update_client_button)
         layout.addWidget(exit_button)
 
         # Definindo Layout do menu principal
@@ -333,7 +337,6 @@ class MainWindowApp(QWidget):
         # Adiciona o layout horizontal ao layout da janela
         layout.addLayout(search_id_layout)
 
-
         # Label para exibir os dados do cliente
         self.result_label = QLabel()
         layout.addWidget(self.result_label)
@@ -379,6 +382,112 @@ class MainWindowApp(QWidget):
             QMessageBox.warning(self.stacked_widget, "Erro", f"Cliente com ID {client_id} não encontrado.")
             self.result_label.setText("")
 
+    def update_client_data_page(self):
+        """Cria a página de busca e exibição de cliente pelo ID"""
+        # Cria o widget da página
+        update_page = QWidget()
+        layout = QVBoxLayout()
+
+        # Título
+        label = QLabel("Atualizar dados do Cliente por ID")
+        layout.addWidget(label, alignment=Qt.AlignTop)
+
+        # Cria um layout horizontal para buscar cliente por ID
+        search_id_layout = QHBoxLayout()
+
+        # Entrada do ID do cliente
+        search_id_label = QLabel("Digite o ID do Cliente:")
+        search_id_layout.addWidget(search_id_label)
+        
+        # Campo de entrada para busca do ID
+        self.id_input = QLineEdit()
+        self.id_input.setFixedWidth(50)
+        search_id_layout.addWidget(self.id_input)
+
+        # Botão para buscar cliente
+        search_button = QPushButton("Buscar Cliente")
+        search_button.setFixedWidth(100)
+        search_button.clicked.connect(self.search_client)  # Buscar o cliente pelo ID
+        search_id_layout.addWidget(search_button)
+
+        # Adiciona o layout horizontal ao layout principal
+        layout.addLayout(search_id_layout)
+
+        # Campos para exibir e editar dados do cliente
+        self.name_input = QLineEdit()
+        self.email_input = QLineEdit()
+        self.phone_input = QLineEdit()
+
+        layout.addWidget(QLabel("Nome:"))
+        layout.addWidget(self.name_input)
+
+        layout.addWidget(QLabel("E-mail:"))
+        layout.addWidget(self.email_input)
+
+        layout.addWidget(QLabel("Telefone:"))
+        layout.addWidget(self.phone_input)
+
+        # Botão para atualizar o cliente
+        update_button = QPushButton("Atualizar Cliente")
+        update_button.setFixedWidth(150)
+        update_button.clicked.connect(self.update_client)  # Função de atualização
+        layout.addWidget(update_button)
+
+        # Label para mostrar o resultado
+        self.result_label = QLabel()
+        layout.addWidget(self.result_label)
+
+        # Botão para voltar ao menu principal
+        return_button = QPushButton("Voltar para o Menu")
+        return_button.clicked.connect(self.show_main_menu)
+        layout.addWidget(return_button)
+
+        # Configura o layout da página
+        update_page.setLayout(layout)
+        self.stacked_widget.addWidget(update_page)
+
+    def update_client(self):
+        client_id = self.id_input.text()
+
+        if not client_id.isdigit():
+            self.result_label.setText("ID inválido.")
+            return
+
+        name = self.name_input.text()
+        email = self.email_input.text()
+        phone = self.phone_input.text()
+
+        try:
+            # Validações dos dados (se necessário)
+            email = validate_email(email)
+            phone = validate_phone(phone)
+
+            # Atualizar cliente no banco de dados
+            with Session(engine) as session:
+                client = session.query(Client).get(int(client_id))
+                if client:
+                    client.name = name
+                    client.email = email
+                    client.phone = phone
+
+                    session.commit()
+                    session.refresh(client)
+                    self.result_label.setText(f"Cliente {client.name} atualizado com sucesso!")
+                else:
+                    self.result_label.setText("Cliente não encontrado.")
+
+        except IntegrityError as ie:
+            if "client.email" in str(ie.orig):
+                self.result_label.setText(f"Erro: O e-mail {email} já está cadastrado.")
+            else:
+                self.result_label.setText(f"Erro de integridade no banco de dados: {ie}")
+
+        except ValueError as ve:
+            self.result_label.setText(f"Erro: {ve}")
+
+        except Exception as e:
+            self.result_label.setText(f"Ocorreu um erro inesperado: {e}")
+
     def show_main_menu(self):
         """Exibe o menu principal"""
         self.stacked_widget.setCurrentIndex(0)
@@ -394,6 +503,10 @@ class MainWindowApp(QWidget):
     def show_retrieve_client_data_page(self):
         """Exibe a página de dados do cliente"""
         self.stacked_widget.setCurrentIndex(3)
+
+    def show_update_client_data_page(self):
+        """Exibe a página de dados do cliente"""
+        self.stacked_widget.setCurrentIndex(4)
 
 # Startup Application
 if __name__ == "__main__":
