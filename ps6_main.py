@@ -313,23 +313,26 @@ class MainWindowApp(QWidget):
         label = QLabel("Visualizar dados do Cliente por ID")
         layout.addWidget(label, alignment=Qt.AlignTop)
 
-        # Cria um layout horizontal para o ID e o campo de entrada
-        id_layout = QHBoxLayout()
+        # Cria um layout horizontal
+        search_id_layout = QHBoxLayout()
 
         # Entrada do ID do cliente
-        id_label = QLabel("Digite o ID do Cliente:")
-        id_layout.addWidget(id_label)
+        search_id_label = QLabel("Digite o ID do Cliente:")
+        search_id_layout.addWidget(search_id_label)
+        # Campo de entrada para busca do ID
         self.id_input = QLineEdit()
-        self.id_input.setFixedWidth(50)  # Define a largura do campo de entrada
-        id_layout.addWidget(self.id_input)
-
-        # Adiciona o layout de ID ao layout principal
-        layout.addLayout(id_layout)
+        self.id_input.setFixedWidth(50)
+        search_id_layout.addWidget(self.id_input)
 
         # Botão para buscar cliente
         search_button = QPushButton("Buscar Cliente")
+        search_button.setFixedWidth(100)
         search_button.clicked.connect(self.search_client)
-        layout.addWidget(search_button)
+        search_id_layout.addWidget(search_button)
+
+        # Adiciona o layout horizontal ao layout da janela
+        layout.addLayout(search_id_layout)
+
 
         # Label para exibir os dados do cliente
         self.result_label = QLabel()
