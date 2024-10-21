@@ -28,7 +28,7 @@ from core.validations import (
 from PySide6.QtCore import QDate, Qt
 from sqlalchemy.orm import Session
 from core.database import connect_db
-from core.crud import create_client, get_all_clients, get_client, update_client
+from core.crud import create_client, get_all_clients, get_client, update_client, delete_client
 from core.models import Client
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -59,6 +59,7 @@ class MainWindowApp(QWidget):
         self.list_all_clients_page()
         self.retrieve_client_data_page()
         self.update_client_data_page()
+        self.delete_client_page()
 
         # Definir o layout da janela principal
         self.setLayout(self.layout)
@@ -90,6 +91,7 @@ class MainWindowApp(QWidget):
         list_all_clients_button = QPushButton("Listar todos os clientes")
         retrieve_client_button = QPushButton("Visualizar dados de um cliente")
         update_client_button = QPushButton("Atualizar dados de um cliente")
+        delete_client_button = QPushButton("Excluir um cliente")
         exit_button = QPushButton("Sair do programa")
 
         # Conectando os botões às funções que alteram as páginas
@@ -97,6 +99,7 @@ class MainWindowApp(QWidget):
         list_all_clients_button.clicked.connect(self.show_list_clients_page)
         retrieve_client_button.clicked.connect(self.show_retrieve_client_data_page)
         update_client_button.clicked.connect(self.show_update_client_data_page)
+        delete_client_button.clicked.connect(self.show_delete_client_page)
         exit_button.clicked.connect(self.close)
 
         # Adicionando os botões ao layout
@@ -104,6 +107,7 @@ class MainWindowApp(QWidget):
         layout.addWidget(list_all_clients_button)
         layout.addWidget(retrieve_client_button)
         layout.addWidget(update_client_button)
+        layout.addWidget(delete_client_button)
         layout.addWidget(exit_button)
 
         # Definindo Layout do menu principal
@@ -506,6 +510,72 @@ class MainWindowApp(QWidget):
         else:
             self.result_label_update.setText(f"Cliente com ID {client_id} não encontrado.")
 
+    def delete_client_page(self):
+        """Cria a página para deletar um cliente pelo ID"""
+        # Cria o widget da página
+        delete_page = QWidget()
+        layout = QVBoxLayout()
+
+        # Título
+        label = QLabel("Deletar Cliente")
+        layout.addWidget(label)
+
+        # Campo para inserir o ID do cliente
+        id_label = QLabel("Informe o ID do Cliente:")
+        layout.addWidget(id_label)
+        
+        id_input = QLineEdit()
+        id_input.setPlaceholderText("ID do Cliente")
+        layout.addWidget(id_input)
+
+        # Botão de Excluir
+        delete_button = QPushButton("Excluir Cliente")
+        layout.addWidget(delete_button)
+
+        # Botão de Voltar ao Menu
+        return_button = QPushButton("Voltar para o Menu")
+        layout.addWidget(return_button)
+
+        # Define o layout da página
+        delete_page.setLayout(layout)
+        self.stacked_widget.addWidget(delete_page)
+
+        # Ação para voltar ao menu principal
+        return_button.clicked.connect(self.show_main_menu)
+
+        # Ação para deletar o cliente ao clicar no botão
+        delete_button.clicked.connect(lambda: self.confirm_delete(id_input.text()))
+
+    def confirm_delete(self, client_id):
+        """Confirma e executa a exclusão do cliente"""
+        if not client_id.isdigit():
+            QMessageBox.warning(self, "Erro", "O ID deve ser um número válido.")
+            return
+
+        client_id = int(client_id)
+        
+        # Busca o cliente no banco de dados
+        client = self.db.query(Client).filter(Client.id == client_id).first()
+
+        if not client:
+            QMessageBox.warning(self, "Erro", f"Cliente com ID {client_id} não encontrado.")
+            return
+
+        # Confirmação antes de deletar
+        confirm = QMessageBox.question(
+            self,
+            "Confirmação",
+            f"Tem certeza que deseja deletar o cliente com ID {client.id} ({client.name})?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+
+        if confirm == QMessageBox.Yes:
+            # Deletar o cliente
+            delete_client(self.db, client_id)
+            QMessageBox.information(self, "Sucesso", "Cliente deletado com sucesso.")
+        else:
+            QMessageBox.information(self, "Cancelado", "Operação de exclusão cancelada.")
+
     def show_main_menu(self):
         """Exibe o menu principal"""
         self.stacked_widget.setCurrentIndex(0)
@@ -527,6 +597,10 @@ class MainWindowApp(QWidget):
     def show_update_client_data_page(self):
         """Exibe a página de dados do cliente"""
         self.stacked_widget.setCurrentIndex(4)
+
+    def show_delete_client_page(self):
+        """Exibe a página de dados do cliente"""
+        self.stacked_widget.setCurrentIndex(5)
 
 # Startup Application
 if __name__ == "__main__":
