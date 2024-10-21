@@ -413,18 +413,18 @@ class MainWindowApp(QWidget):
         layout.addLayout(search_id_layout)
 
         # Campos editáveis para os dados do cliente
-        self.name_input = QLineEdit()
-        self.email_input = QLineEdit()
-        self.phone_input = QLineEdit()
+        self.name_input_update = QLineEdit()
+        self.email_input_update = QLineEdit()
+        self.phone_input_update = QLineEdit()
 
         layout.addWidget(QLabel("Nome:"))
-        layout.addWidget(self.name_input)
+        layout.addWidget(self.name_input_update)
 
         layout.addWidget(QLabel("E-mail:"))
-        layout.addWidget(self.email_input)
+        layout.addWidget(self.email_input_update)
 
         layout.addWidget(QLabel("Telefone:"))
-        layout.addWidget(self.phone_input)
+        layout.addWidget(self.phone_input_update)
 
         # Botão para salvar as alterações
         save_button = QPushButton("Salvar Alterações")
@@ -455,10 +455,12 @@ class MainWindowApp(QWidget):
         client = get_client(self.db, int(client_id))
 
         if client:
+            # Limpar todas as mensagens de atualização anteriores
+            self.result_label_update.setText("")
             # Preenche os campos editáveis com os dados do cliente
-            self.name_input.setText(client.name)
-            self.email_input.setText(client.email)
-            self.phone_input.setText(client.phone)
+            self.name_input_update.setText(client.name)
+            self.email_input_update.setText(client.email)
+            self.phone_input_update.setText(client.phone)
             self.result_label_update.setText(f"Cliente com ID {client_id} carregado para atualização.")
         else:
             QMessageBox.warning(self.stacked_widget, "Erro", f"Cliente com ID {client_id} não encontrado.")
@@ -476,9 +478,9 @@ class MainWindowApp(QWidget):
 
         if client:
             # Atualiza os dados do cliente com base no input
-            client.name = self.name_input.text().strip()
-            client.email = self.email_input.text().strip()
-            client.phone = self.phone_input.text().strip()
+            client.name = self.name_input_update.text().strip()
+            client.email = validate_email(self.email_input_update.text().strip())
+            client.phone = validate_phone(self.phone_input_update.text().strip())
 
             try:
                 update_client(self.db, client)  # Atualiza o cliente no banco de dados
