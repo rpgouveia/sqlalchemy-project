@@ -238,33 +238,56 @@ class MainWindowApp(QWidget):
 
     def list_all_clients_page(self):
         """Cria a página de listagem de clientes"""
-        # Cria o widget da página
-        list_page = QWidget()
-        layout = QVBoxLayout()
+        # Verifica se a página de listagem já foi criada
+        if hasattr(self, 'list_page'):
+            # Se a página já existir, limpa o conteúdo da tabela para ser atualizado
+            self.table.clearContents()
+        else:
+            # Cria o widget da página uma vez e guarda em self.list_page
+            self.list_page = QWidget()
+            layout = QVBoxLayout()
 
-        # Título
-        label = QLabel("Lista de Clientes")
+            # Título
+            label = QLabel("Lista de Clientes")
 
-        # Cria a tabela para exibir os clientes
-        table = QTableWidget()
-        table.setColumnCount(6)  # Número de colunas
-        table.setHorizontalHeaderLabels(["ID", "Nome", "CPF", "Idade", "Cidade", "Email"])
+            # Cria a tabela para exibir os clientes
+            self.table = QTableWidget()
+            self.table.setColumnCount(6)  # Número de colunas
+            self.table.setHorizontalHeaderLabels(["ID", "Nome", "CPF", "Idade", "Cidade", "Email"])
 
-        # Definindo uma largura mínima para as colunas
-        table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)  # ID
-        table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)           # Nome
-        table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)  # CPF
-        table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Idade
-        table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)           # Cidade
-        table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)           # Email
-        # Ordenação
-        table.setSortingEnabled(True)
+            # Definindo uma largura mínima para as colunas
+            self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)  # ID
+            self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)           # Nome
+            self.table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)  # CPF
+            self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeToContents)  # Idade
+            self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)           # Cidade
+            self.table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)           # Email
+            # Ordenação
+            self.table.setSortingEnabled(True)
 
+            # Botão para voltar ao menu principal
+            return_button = QPushButton("Voltar para o Menu")
+            return_button.clicked.connect(self.show_main_menu)
+
+            # Adiciona os widgets ao layout
+            layout.addWidget(label)
+            layout.addWidget(self.table)
+            layout.addWidget(return_button)
+
+            # Configura o layout da página
+            self.list_page.setLayout(layout)
+            self.stacked_widget.addWidget(self.list_page)
+
+        # Busca e exibe os dados atualizados
+        self.update_clients_table()
+
+    def update_clients_table(self):
+        """Atualiza a tabela de clientes com os dados mais recentes do banco"""
         # Função para buscar todos os clientes no banco de dados
         clients = get_all_clients(self.db)
 
         # Define o número de linhas com base no número de clientes
-        table.setRowCount(len(clients))
+        self.table.setRowCount(len(clients))
 
         # Popula a tabela com os dados dos clientes
         for row, client in enumerate(clients):
@@ -287,25 +310,12 @@ class MainWindowApp(QWidget):
             email_item.setTextAlignment(Qt.AlignCenter)
 
             # Adiciona os itens à tabela
-            table.setItem(row, 0, id_item)
-            table.setItem(row, 1, name_item)
-            table.setItem(row, 2, cpf_item)
-            table.setItem(row, 3, age_item)
-            table.setItem(row, 4, city_item)
-            table.setItem(row, 5, email_item)
-
-        # Botão para voltar ao menu principal
-        return_button = QPushButton("Voltar para o Menu")
-        return_button.clicked.connect(self.show_main_menu)
-
-        # Adiciona os widgets ao layout
-        layout.addWidget(label)
-        layout.addWidget(table)
-        layout.addWidget(return_button)
-
-        # Configura o layout da página
-        list_page.setLayout(layout)
-        self.stacked_widget.addWidget(list_page)
+            self.table.setItem(row, 0, id_item)
+            self.table.setItem(row, 1, name_item)
+            self.table.setItem(row, 2, cpf_item)
+            self.table.setItem(row, 3, age_item)
+            self.table.setItem(row, 4, city_item)
+            self.table.setItem(row, 5, email_item)
 
     def retrieve_client_data_page(self):
         """Cria a página de busca e exibição de cliente pelo ID"""
@@ -506,7 +516,9 @@ class MainWindowApp(QWidget):
 
     def show_list_clients_page(self):
         """Exibe a página de listagem de clientes"""
-        self.stacked_widget.setCurrentIndex(2)
+        # Atualiza a tabela de clientes antes de exibir a página
+        self.list_all_clients_page()
+        self.stacked_widget.setCurrentIndex(self.stacked_widget.indexOf(self.list_page))
 
     def show_retrieve_client_data_page(self):
         """Exibe a página de dados do cliente"""
