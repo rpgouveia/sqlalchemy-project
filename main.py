@@ -28,7 +28,13 @@ from core.validations import (
 from PySide6.QtCore import QDate, Qt
 from sqlalchemy.orm import Session
 from core.database import connect_db
-from core.crud import create_client, get_all_clients, get_client, update_client, delete_client
+from core.crud import (
+    create_client, 
+    get_all_clients, 
+    get_client, 
+    update_client, 
+    delete_client
+)
 from core.models import Client
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
