@@ -38,6 +38,7 @@ from core.crud import (
 from core.models import Client
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from gui.interface import create_register_client_page
 
 
 class MainWindowApp(QWidget):
@@ -76,10 +77,11 @@ class MainWindowApp(QWidget):
             self.db.close()
         event.accept()
 
+    # Janelas e Inputs
     def create_main_menu(self):
         """Cria o menu principal com botões para diferentes funcionalidades"""
 
-        # Rascunho do Menu Principal
+        # Menu Principal
         """
         1 - Cadastrar um novo cliente
         2 - Listar todos os clientes
@@ -582,6 +584,7 @@ class MainWindowApp(QWidget):
         else:
             QMessageBox.information(self, "Cancelado", "Operação de exclusão cancelada.")
 
+    # Funções para mostrar as janelas
     def show_main_menu(self):
         """Exibe o menu principal"""
         self.stacked_widget.setCurrentIndex(0)
