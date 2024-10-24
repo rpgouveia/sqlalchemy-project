@@ -24,16 +24,6 @@ from gui.input_handlers import (
 def create_main_menu(main_window):
     """Cria o menu principal com botões para diferentes funcionalidades"""
 
-    # Menu Principal
-    """
-    1 - Cadastrar um novo cliente
-    2 - Listar todos os clientes
-    3 - Ler um cliente por ID
-    4 - Atualizar um cliente por ID
-    5 - Deletar um cliente por ID
-    6 - Sair do programa
-    """
-
     main_menu = QWidget()
     layout = QVBoxLayout()
 
@@ -72,12 +62,12 @@ def create_register_client_page(main_window):
     layout = QVBoxLayout()
     form_layout = QFormLayout()
 
-    # Criando os campos de entrada (QLineEdit, QDateEdit, etc.)
+    # Criando os campos de entrada
     main_window.name_input = QLineEdit()
     main_window.cpf_input = QLineEdit()
     main_window.birthdate_input = QDateEdit()
-    main_window.birthdate_input.setCalendarPopup(True)  # Permite escolher a data
-    main_window.birthdate_input.setDate(QDate.currentDate())  # Data padrão
+    main_window.birthdate_input.setCalendarPopup(True)
+    main_window.birthdate_input.setDate(QDate.currentDate())
     main_window.address_1_input = QLineEdit()
     main_window.address_2_input = QLineEdit()
     main_window.post_code_input = QLineEdit()
@@ -122,10 +112,8 @@ def list_all_clients_page(main_window):
     """Cria a página de listagem de clientes"""
     # Verifica se a página de listagem já foi criada
     if hasattr(main_window, "list_page"):
-        # Se a página já existir, limpa o conteúdo da tabela para ser atualizado
         main_window.table.clearContents()
     else:
-        # Cria o widget da página uma vez e guarda em main_window.list_page
         main_window.list_page = QWidget()
         layout = QVBoxLayout()
 
@@ -134,7 +122,7 @@ def list_all_clients_page(main_window):
 
         # Cria a tabela para exibir os clientes
         main_window.table = QTableWidget()
-        main_window.table.setColumnCount(6)  # Número de colunas
+        main_window.table.setColumnCount(6)
         main_window.table.setHorizontalHeaderLabels(
             ["ID", "Nome", "CPF", "Idade", "Cidade", "Email"]
         )
@@ -142,22 +130,22 @@ def list_all_clients_page(main_window):
         # Definindo uma largura mínima para as colunas
         main_window.table.horizontalHeader().setSectionResizeMode(
             0, QHeaderView.ResizeToContents
-        )  # ID
+        )
         main_window.table.horizontalHeader().setSectionResizeMode(
             1, QHeaderView.Stretch
-        )  # Nome
+        )
         main_window.table.horizontalHeader().setSectionResizeMode(
             2, QHeaderView.ResizeToContents
-        )  # CPF
+        )
         main_window.table.horizontalHeader().setSectionResizeMode(
             3, QHeaderView.ResizeToContents
-        )  # Idade
+        )
         main_window.table.horizontalHeader().setSectionResizeMode(
             4, QHeaderView.Stretch
-        )  # Cidade
+        )
         main_window.table.horizontalHeader().setSectionResizeMode(
             5, QHeaderView.Stretch
-        )  # Email
+        )
         # Ordenação
         main_window.table.setSortingEnabled(True)
 
@@ -202,7 +190,9 @@ def retrieve_client_data_page(main_window):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(lambda: search_client(main_window)) # Aqui onde é chamado a busca
+    search_button.clicked.connect(
+        lambda: search_client(main_window)
+    )
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela
@@ -246,7 +236,9 @@ def update_client_data_page(main_window):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(lambda: search_client_for_update(main_window)) # Aqui onde é chamado a busca também
+    search_button.clicked.connect(
+        lambda: search_client_for_update(main_window)
+    )
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela
@@ -268,7 +260,9 @@ def update_client_data_page(main_window):
 
     # Botão para salvar as alterações
     save_button = QPushButton("Salvar Alterações")
-    save_button.clicked.connect(lambda: update_client_data(main_window))
+    save_button.clicked.connect(
+        lambda: update_client_data(main_window)
+    )
     layout.addWidget(save_button)
 
     # Label para feedback de status
@@ -315,7 +309,9 @@ def delete_client_page(main_window):
     return_button.clicked.connect(main_window.show_main_menu)
 
     # Ação para deletar o cliente ao clicar no botão
-    delete_button.clicked.connect(lambda: confirm_delete(main_window, id_input.text()))
+    delete_button.clicked.connect(
+        lambda: confirm_delete(main_window, id_input.text())
+    )
 
     # Define o layout da página
     delete_page.setLayout(layout)
