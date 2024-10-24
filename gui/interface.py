@@ -202,7 +202,7 @@ def retrieve_client_data_page(main_window):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(lambda: search_client(main_window))
+    search_button.clicked.connect(lambda: search_client(main_window)) # Aqui onde é chamado a busca
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela
@@ -246,7 +246,7 @@ def update_client_data_page(main_window):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(lambda: search_client_for_update(main_window))
+    search_button.clicked.connect(lambda: search_client_for_update(main_window)) # Aqui onde é chamado a busca também
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela

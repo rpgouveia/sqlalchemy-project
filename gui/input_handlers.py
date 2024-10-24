@@ -100,9 +100,14 @@ def clear_fields(interface):
     interface.email_input.clear()
 
 
-def search_client(interface):
-    """Função para buscar cliente no banco de dados pelo ID inserido"""
-    client_id = interface.id_input.text().strip()
+def search_client_generic(
+    interface,
+    client_id_input,
+    result_label, 
+    editable_fields=None
+):
+    """Função genérica para buscar cliente no banco de dados pelo ID inserido."""
+    client_id = client_id_input.text().strip()
 
     if not client_id.isdigit():
         QMessageBox.warning(
@@ -113,61 +118,57 @@ def search_client(interface):
     client = get_client(interface.db, int(client_id))
 
     if client:
-        # Exibe os dados do cliente
-        client_data = (
-            f"ID: {client.id}\n"
-            f"Nome: {client.name}\n"
-            f"CPF: {client.cpf}\n"
-            f"Data de Nascimento: {client.birthdate}\n"
-            f"Idade: {client.age}\n"
-            f"Endereço 1: {client.address_1}\n"
-            f"Endereço 2: {client.address_2 or 'Não informado'}\n"
-            f"CEP: {client.post_code}\n"
-            f"Cidade: {client.city}\n"
-            f"Estado: {client.state}\n"
-            f"País: {client.country}\n"
-            f"Telefone: {client.phone}\n"
-            f"E-mail: {client.email}"
-        )
-        interface.result_label.setText(client_data)
+        if editable_fields:
+            editable_fields["name"].setText(client.name)
+            editable_fields["email"].setText(client.email)
+            editable_fields["phone"].setText(client.phone)
+            result_label.setText(
+                f"Cliente com ID {client_id} carregado para atualização."
+            )
+        else:
+            client_data = (
+                f"ID: {client.id}\n"
+                f"Nome: {client.name}\n"
+                f"CPF: {client.cpf}\n"
+                f"Data de Nascimento: {client.birthdate}\n"
+                f"Idade: {client.age}\n"
+                f"Endereço 1: {client.address_1}\n"
+                f"Endereço 2: {client.address_2 or 'Não informado'}\n"
+                f"CEP: {client.post_code}\n"
+                f"Cidade: {client.city}\n"
+                f"Estado: {client.state}\n"
+                f"País: {client.country}\n"
+                f"Telefone: {client.phone}\n"
+                f"E-mail: {client.email}"
+            )
+            result_label.setText(client_data)
     else:
         QMessageBox.warning(
             interface.stacked_widget,
             "Erro",
             f"Cliente com ID {client_id} não encontrado.",
         )
-        interface.result_label.setText("")
+        result_label.setText("")
+
+
+def search_client(interface):
+    """Função para buscar cliente para visualização."""
+    search_client_generic(interface, interface.id_input, interface.result_label)
 
 
 def search_client_for_update(interface):
-    """Função para buscar cliente no banco de dados pelo ID inserido (para atualização)"""
-    client_id = interface.id_input_update.text().strip()
-
-    if not client_id.isdigit():
-        QMessageBox.warning(
-            interface.stacked_widget, "Erro", "Por favor, insira um ID válido."
-        )
-        return
-
-    client = get_client(interface.db, int(client_id))
-
-    if client:
-        # Limpar todas as mensagens de atualização anteriores
-        interface.result_label_update.setText("")
-        # Preenche os campos editáveis com os dados do cliente
-        interface.name_input_update.setText(client.name)
-        interface.email_input_update.setText(client.email)
-        interface.phone_input_update.setText(client.phone)
-        interface.result_label_update.setText(
-            f"Cliente com ID {client_id} carregado para atualização."
-        )
-    else:
-        QMessageBox.warning(
-            interface.stacked_widget,
-            "Erro",
-            f"Cliente com ID {client_id} não encontrado.",
-        )
-        interface.result_label_update.setText("")
+    """Função para buscar cliente para atualização."""
+    editable_fields = {
+        "name": interface.name_input_update,
+        "email": interface.email_input_update,
+        "phone": interface.phone_input_update,
+    }
+    search_client_generic(
+        interface,
+        interface.id_input_update,
+        interface.result_label_update,
+        editable_fields,
+    )
 
 
 def update_client_data(interface):
