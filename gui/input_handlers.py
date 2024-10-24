@@ -23,23 +23,23 @@ from core.models import Client
 from sqlalchemy.exc import IntegrityError
 
 
-def save_new_client(interface):
+def save_new_client(self):
     """Salva o cliente no banco de dados após validar os dados"""
     try:
         # Capturar dados dos campos
-        name = interface.name_input.text()
-        cpf = validate_cpf(interface.cpf_input.text())
+        name = self.name_input.text()
+        cpf = validate_cpf(self.cpf_input.text())
         birthdate = validate_birthdate(
-            interface.birthdate_input.date().toString("yyyy-MM-dd")
+            self.birthdate_input.date().toString("yyyy-MM-dd")
         )
-        address_1 = interface.address_1_input.text()
-        address_2 = interface.address_2_input.text() or None
-        post_code = validate_post_code(interface.post_code_input.text())
-        city = interface.city_input.text()
-        state = validate_state(interface.state_input.text())
-        country = validate_country(interface.country_input.text())
-        phone = validate_phone(interface.phone_input.text())
-        email = validate_email(interface.email_input.text())
+        address_1 = self.address_1_input.text()
+        address_2 = self.address_2_input.text() or None
+        post_code = validate_post_code(self.post_code_input.text())
+        city = self.city_input.text()
+        state = validate_state(self.state_input.text())
+        country = validate_country(self.country_input.text())
+        phone = validate_phone(self.phone_input.text())
+        email = validate_email(self.email_input.text())
 
         # Criando o novo objeto Client
         new_client = Client(
@@ -57,51 +57,51 @@ def save_new_client(interface):
         )
 
         # Salvar no banco de dados
-        create_client(interface.db, new_client)
-        QMessageBox.information(interface, "Sucesso", "Cliente cadastrado com sucesso!")
+        create_client(self.db, new_client)
+        QMessageBox.information(self, "Sucesso", "Cliente cadastrado com sucesso!")
 
         # Limpa os campos após cadastro
-        clear_fields(interface)
+        clear_fields(self)
 
     except IntegrityError as ie:
-        interface.db.rollback()
+        self.db.rollback()
         if "client.cpf" in str(ie.orig):
             QMessageBox.warning(
-                interface, "Erro", f"O CPF {cpf} já está cadastrado no sistema."
+                self, "Erro", f"O CPF {cpf} já está cadastrado no sistema."
             )
         elif "client.email" in str(ie.orig):
             QMessageBox.warning(
-                interface, "Erro", f"O e-mail {email} já está cadastrado no sistema."
+                self, "Erro", f"O e-mail {email} já está cadastrado no sistema."
             )
         else:
             QMessageBox.critical(
-                interface, "Erro", f"Erro de integridade no banco de dados: {ie}"
+                self, "Erro", f"Erro de integridade no banco de dados: {ie}"
             )
     except ValueError as ve:
-        QMessageBox.warning(interface, "Erro de Validação", f"Erro: {ve}")
+        QMessageBox.warning(self, "Erro de Validação", f"Erro: {ve}")
     except Exception as e:
         QMessageBox.critical(
-            interface, "Erro Inesperado", f"Ocorreu um erro inesperado: {e}"
+            self, "Erro Inesperado", f"Ocorreu um erro inesperado: {e}"
         )
 
 
-def clear_fields(interface):
+def clear_fields(self):
     """Limpa os campos de entrada do formulário"""
-    interface.name_input.clear()
-    interface.cpf_input.clear()
-    interface.birthdate_input.clear()
-    interface.address_1_input.clear()
-    interface.address_2_input.clear()
-    interface.post_code_input.clear()
-    interface.city_input.clear()
-    interface.state_input.clear()
-    interface.country_input.clear()
-    interface.phone_input.clear()
-    interface.email_input.clear()
+    self.name_input.clear()
+    self.cpf_input.clear()
+    self.birthdate_input.clear()
+    self.address_1_input.clear()
+    self.address_2_input.clear()
+    self.post_code_input.clear()
+    self.city_input.clear()
+    self.state_input.clear()
+    self.country_input.clear()
+    self.phone_input.clear()
+    self.email_input.clear()
 
 
 def search_client_generic(
-    interface,
+    self,
     client_id_input,
     result_label, 
     editable_fields=None
@@ -111,11 +111,11 @@ def search_client_generic(
 
     if not client_id.isdigit():
         QMessageBox.warning(
-            interface.stacked_widget, "Erro", "Por favor, insira um ID válido."
+            self.stacked_widget, "Erro", "Por favor, insira um ID válido."
         )
         return
 
-    client = get_client(interface.db, int(client_id))
+    client = get_client(self.db, int(client_id))
 
     if client:
         if editable_fields:
@@ -144,79 +144,79 @@ def search_client_generic(
             result_label.setText(client_data)
     else:
         QMessageBox.warning(
-            interface.stacked_widget,
+            self.stacked_widget,
             "Erro",
             f"Cliente com ID {client_id} não encontrado.",
         )
         result_label.setText("")
 
 
-def search_client(interface):
+def search_client(self):
     """Função para buscar cliente para visualização."""
-    search_client_generic(interface, interface.id_input, interface.result_label)
+    search_client_generic(self, self.id_input, self.result_label)
 
 
-def search_client_for_update(interface):
+def search_client_for_update(self):
     """Função para buscar cliente para atualização."""
     editable_fields = {
-        "name": interface.name_input_update,
-        "email": interface.email_input_update,
-        "phone": interface.phone_input_update,
+        "name": self.name_input_update,
+        "email": self.email_input_update,
+        "phone": self.phone_input_update,
     }
     search_client_generic(
-        interface,
-        interface.id_input_update,
-        interface.result_label_update,
+        self,
+        self.id_input_update,
+        self.result_label_update,
         editable_fields,
     )
 
 
-def update_client_data(interface):
+def update_client_data(self):
     """Função para salvar as alterações no banco de dados"""
-    client_id = interface.id_input_update.text().strip()
+    client_id = self.id_input_update.text().strip()
 
     if not client_id.isdigit():
-        QMessageBox.warning(interface.stacked_widget, "Erro", "ID inválido.")
+        QMessageBox.warning(self.stacked_widget, "Erro", "ID inválido.")
         return
 
-    client = get_client(interface.db, int(client_id))
+    client = get_client(self.db, int(client_id))
 
     if client:
         # Atualiza os dados do cliente com base no input
-        client.name = interface.name_input_update.text().strip()
-        client.email = validate_email(interface.email_input_update.text().strip())
-        client.phone = validate_phone(interface.phone_input_update.text().strip())
+        client.name = self.name_input_update.text().strip()
+        client.email = validate_email(self.email_input_update.text().strip())
+        client.phone = validate_phone(self.phone_input_update.text().strip())
 
         try:
-            update_client(interface.db, client)  # Atualiza o cliente no banco de dados
-            interface.result_label_update.setText(
+            update_client(self.db, client)  # Atualiza o cliente no banco de dados
+            self.result_label_update.setText(
                 f"Cliente com ID {client.id} atualizado com sucesso!"
             )
         except IntegrityError as ie:
-            interface.db.rollback()
+            self.db.rollback()
             if "client.email" in str(ie.orig):
-                interface.result_label_update.setText(
+                self.result_label_update.setText(
                     f"Erro: O e-mail {client.email} já está cadastrado."
                 )
             else:
-                interface.result_label_update.setText(
+                self.result_label_update.setText(
                     f"Erro de integridade no banco de dados: {ie}"
                 )
         except Exception as e:
-            interface.result_label_update.setText(f"Ocorreu um erro: {e}")
+            self.result_label_update.setText(f"Ocorreu um erro: {e}")
     else:
-        interface.result_label_update.setText(
+        self.result_label_update.setText(
             f"Cliente com ID {client_id} não encontrado."
         )
 
 
-def update_clients_table(interface):
+def update_clients_table(self):
     """Atualiza a tabela de clientes com os dados mais recentes do banco"""
     # Função para buscar todos os clientes no banco de dados
-    clients = get_all_clients(interface.db)
+    clients = get_all_clients(self.db)
 
     # Define o número de linhas com base no número de clientes
-    interface.table.setRowCount(len(clients))
+    self.table.setRowCount(len(clients))
 
     # Popula a tabela com os dados dos clientes
     for row, client in enumerate(clients):
@@ -239,34 +239,34 @@ def update_clients_table(interface):
         email_item.setTextAlignment(Qt.AlignCenter)
 
         # Adiciona os itens à tabela
-        interface.table.setItem(row, 0, id_item)
-        interface.table.setItem(row, 1, name_item)
-        interface.table.setItem(row, 2, cpf_item)
-        interface.table.setItem(row, 3, age_item)
-        interface.table.setItem(row, 4, city_item)
-        interface.table.setItem(row, 5, email_item)
+        self.table.setItem(row, 0, id_item)
+        self.table.setItem(row, 1, name_item)
+        self.table.setItem(row, 2, cpf_item)
+        self.table.setItem(row, 3, age_item)
+        self.table.setItem(row, 4, city_item)
+        self.table.setItem(row, 5, email_item)
 
 
-def confirm_delete(interface, id):
+def confirm_delete(self, id):
     """Confirma e executa a exclusão do cliente"""
     if not id.isdigit():
-        QMessageBox.warning(interface, "Erro", "O ID deve ser um número válido.")
+        QMessageBox.warning(self, "Erro", "O ID deve ser um número válido.")
         return
 
     client_id = int(id)
 
     # Busca o cliente no banco de dados
-    client = interface.db.query(Client).filter(Client.id == client_id).first()
+    client = self.db.query(Client).filter(Client.id == client_id).first()
 
     if not client:
         QMessageBox.warning(
-            interface, "Erro", f"Cliente com ID {client_id} não encontrado."
+            self, "Erro", f"Cliente com ID {client_id} não encontrado."
         )
         return
 
     # Confirmação antes de deletar
     confirm = QMessageBox.question(
-        interface,
+        self,
         "Confirmação",
         f"Tem certeza que deseja deletar o cliente com ID {client.id} ({client.name})?",
         QMessageBox.Yes | QMessageBox.No,
@@ -274,9 +274,9 @@ def confirm_delete(interface, id):
 
     if confirm == QMessageBox.Yes:
         # Deletar o cliente
-        delete_client(interface.db, client_id)
-        QMessageBox.information(interface, "Sucesso", "Cliente deletado com sucesso.")
+        delete_client(self.db, client_id)
+        QMessageBox.information(self, "Sucesso", "Cliente deletado com sucesso.")
     else:
         QMessageBox.information(
-            interface, "Cancelado", "Operação de exclusão cancelada."
+            self, "Cancelado", "Operação de exclusão cancelada."
         )

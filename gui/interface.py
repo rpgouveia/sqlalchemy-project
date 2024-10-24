@@ -21,7 +21,7 @@ from gui.input_handlers import (
 )
 
 
-def create_main_menu(main_window):
+def create_main_menu(self):
     """Cria o menu principal com botões para diferentes funcionalidades"""
 
     main_menu = QWidget()
@@ -36,12 +36,12 @@ def create_main_menu(main_window):
     exit_button = QPushButton("Sair do programa")
 
     # Conectando os botões às funções que alteram as páginas
-    register_button.clicked.connect(main_window.show_register_client_page)
-    list_all_clients_button.clicked.connect(main_window.show_list_clients_page)
-    retrieve_client_button.clicked.connect(main_window.show_retrieve_client_data_page)
-    update_client_button.clicked.connect(main_window.show_update_client_data_page)
-    delete_client_button.clicked.connect(main_window.show_delete_client_page)
-    exit_button.clicked.connect(main_window.close)
+    register_button.clicked.connect(self.show_register_client_page)
+    list_all_clients_button.clicked.connect(self.show_list_clients_page)
+    retrieve_client_button.clicked.connect(self.show_retrieve_client_data_page)
+    update_client_button.clicked.connect(self.show_update_client_data_page)
+    delete_client_button.clicked.connect(self.show_delete_client_page)
+    exit_button.clicked.connect(self.close)
 
     # Adicionando os botões ao layout
     layout.addWidget(register_button)
@@ -53,50 +53,50 @@ def create_main_menu(main_window):
 
     # Definindo Layout do menu principal
     main_menu.setLayout(layout)
-    main_window.stacked_widget.addWidget(main_menu)
+    self.stacked_widget.addWidget(main_menu)
 
 
-def create_register_client_page(main_window):
+def create_register_client_page(self):
     """Cria a página de cadastro de cliente"""
     register_page = QWidget()
     layout = QVBoxLayout()
     form_layout = QFormLayout()
 
     # Criando os campos de entrada
-    main_window.name_input = QLineEdit()
-    main_window.cpf_input = QLineEdit()
-    main_window.birthdate_input = QDateEdit()
-    main_window.birthdate_input.setCalendarPopup(True)
-    main_window.birthdate_input.setDate(QDate.currentDate())
-    main_window.address_1_input = QLineEdit()
-    main_window.address_2_input = QLineEdit()
-    main_window.post_code_input = QLineEdit()
-    main_window.city_input = QLineEdit()
-    main_window.state_input = QLineEdit()
-    main_window.country_input = QLineEdit()
-    main_window.phone_input = QLineEdit()
-    main_window.email_input = QLineEdit()
+    self.name_input = QLineEdit()
+    self.cpf_input = QLineEdit()
+    self.birthdate_input = QDateEdit()
+    self.birthdate_input.setCalendarPopup(True)
+    self.birthdate_input.setDate(QDate.currentDate())
+    self.address_1_input = QLineEdit()
+    self.address_2_input = QLineEdit()
+    self.post_code_input = QLineEdit()
+    self.city_input = QLineEdit()
+    self.state_input = QLineEdit()
+    self.country_input = QLineEdit()
+    self.phone_input = QLineEdit()
+    self.email_input = QLineEdit()
 
     # Adicionando campos ao layout de formulário
-    form_layout.addRow("Nome Completo:", main_window.name_input)
-    form_layout.addRow("CPF:", main_window.cpf_input)
-    form_layout.addRow("Data de Nascimento:", main_window.birthdate_input)
-    form_layout.addRow("Endereço Principal:", main_window.address_1_input)
-    form_layout.addRow("Complemento:", main_window.address_2_input)
-    form_layout.addRow("CEP:", main_window.post_code_input)
-    form_layout.addRow("Cidade:", main_window.city_input)
-    form_layout.addRow("Estado (Ex: PR):", main_window.state_input)
-    form_layout.addRow("País (Ex: BR):", main_window.country_input)
-    form_layout.addRow("Telefone (com DDD):", main_window.phone_input)
-    form_layout.addRow("Email:", main_window.email_input)
+    form_layout.addRow("Nome Completo:", self.name_input)
+    form_layout.addRow("CPF:", self.cpf_input)
+    form_layout.addRow("Data de Nascimento:", self.birthdate_input)
+    form_layout.addRow("Endereço Principal:", self.address_1_input)
+    form_layout.addRow("Complemento:", self.address_2_input)
+    form_layout.addRow("CEP:", self.post_code_input)
+    form_layout.addRow("Cidade:", self.city_input)
+    form_layout.addRow("Estado (Ex: PR):", self.state_input)
+    form_layout.addRow("País (Ex: BR):", self.country_input)
+    form_layout.addRow("Telefone (com DDD):", self.phone_input)
+    form_layout.addRow("Email:", self.email_input)
 
     # Botão para salvar o cliente
     submit_button = QPushButton("Cadastrar Cliente")
-    submit_button.clicked.connect(lambda: save_new_client(main_window))
+    submit_button.clicked.connect(lambda: save_new_client(self))
 
     # Botão para voltar ao menu
     return_button = QPushButton("Voltar para o Menu")
-    return_button.clicked.connect(main_window.show_main_menu)
+    return_button.clicked.connect(self.show_main_menu)
 
     # Construindo o Layout da Página
     layout.addLayout(form_layout)
@@ -105,68 +105,68 @@ def create_register_client_page(main_window):
 
     # Definindo Layout da Página
     register_page.setLayout(layout)
-    main_window.stacked_widget.addWidget(register_page)
+    self.stacked_widget.addWidget(register_page)
 
 
-def list_all_clients_page(main_window):
+def list_all_clients_page(self):
     """Cria a página de listagem de clientes"""
     # Verifica se a página de listagem já foi criada
-    if hasattr(main_window, "list_page"):
-        main_window.table.clearContents()
+    if hasattr(self, "list_page"):
+        self.table.clearContents()
     else:
-        main_window.list_page = QWidget()
+        self.list_page = QWidget()
         layout = QVBoxLayout()
 
         # Título
         label = QLabel("Lista de Clientes")
 
         # Cria a tabela para exibir os clientes
-        main_window.table = QTableWidget()
-        main_window.table.setColumnCount(6)
-        main_window.table.setHorizontalHeaderLabels(
+        self.table = QTableWidget()
+        self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels(
             ["ID", "Nome", "CPF", "Idade", "Cidade", "Email"]
         )
 
         # Definindo uma largura mínima para as colunas
-        main_window.table.horizontalHeader().setSectionResizeMode(
+        self.table.horizontalHeader().setSectionResizeMode(
             0, QHeaderView.ResizeToContents
         )
-        main_window.table.horizontalHeader().setSectionResizeMode(
+        self.table.horizontalHeader().setSectionResizeMode(
             1, QHeaderView.Stretch
         )
-        main_window.table.horizontalHeader().setSectionResizeMode(
+        self.table.horizontalHeader().setSectionResizeMode(
             2, QHeaderView.ResizeToContents
         )
-        main_window.table.horizontalHeader().setSectionResizeMode(
+        self.table.horizontalHeader().setSectionResizeMode(
             3, QHeaderView.ResizeToContents
         )
-        main_window.table.horizontalHeader().setSectionResizeMode(
+        self.table.horizontalHeader().setSectionResizeMode(
             4, QHeaderView.Stretch
         )
-        main_window.table.horizontalHeader().setSectionResizeMode(
+        self.table.horizontalHeader().setSectionResizeMode(
             5, QHeaderView.Stretch
         )
         # Ordenação
-        main_window.table.setSortingEnabled(True)
+        self.table.setSortingEnabled(True)
 
         # Botão para voltar ao menu principal
         return_button = QPushButton("Voltar para o Menu")
-        return_button.clicked.connect(main_window.show_main_menu)
+        return_button.clicked.connect(self.show_main_menu)
 
         # Adiciona os widgets ao layout
         layout.addWidget(label)
-        layout.addWidget(main_window.table)
+        layout.addWidget(self.table)
         layout.addWidget(return_button)
 
         # Configura o layout da página
-        main_window.list_page.setLayout(layout)
-        main_window.stacked_widget.addWidget(main_window.list_page)
+        self.list_page.setLayout(layout)
+        self.stacked_widget.addWidget(self.list_page)
 
     # Busca e exibe os dados atualizados
-    update_clients_table(main_window)
+    update_clients_table(self)
 
 
-def retrieve_client_data_page(main_window):
+def retrieve_client_data_page(self):
     """Cria a página de busca e exibição de cliente pelo ID"""
     # Cria o widget da página
     retrieve_page = QWidget()
@@ -183,15 +183,15 @@ def retrieve_client_data_page(main_window):
     search_id_label = QLabel("Digite o ID do Cliente:")
     search_id_layout.addWidget(search_id_label)
     # Campo de entrada para busca do ID
-    main_window.id_input = QLineEdit()
-    main_window.id_input.setFixedWidth(50)
-    search_id_layout.addWidget(main_window.id_input)
+    self.id_input = QLineEdit()
+    self.id_input.setFixedWidth(50)
+    search_id_layout.addWidget(self.id_input)
 
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
     search_button.clicked.connect(
-        lambda: search_client(main_window)
+        lambda: search_client(self)
     )
     search_id_layout.addWidget(search_button)
 
@@ -199,20 +199,20 @@ def retrieve_client_data_page(main_window):
     layout.addLayout(search_id_layout)
 
     # Label para exibir os dados do cliente
-    main_window.result_label = QLabel()
-    layout.addWidget(main_window.result_label)
+    self.result_label = QLabel()
+    layout.addWidget(self.result_label)
 
     # Botão para voltar ao menu principal
     return_button = QPushButton("Voltar para o Menu")
-    return_button.clicked.connect(main_window.show_main_menu)
+    return_button.clicked.connect(self.show_main_menu)
     layout.addWidget(return_button)
 
     # Configura o layout da página
     retrieve_page.setLayout(layout)
-    main_window.stacked_widget.addWidget(retrieve_page)
+    self.stacked_widget.addWidget(retrieve_page)
 
 
-def update_client_data_page(main_window):
+def update_client_data_page(self):
     """Cria a página de atualização de cliente pelo ID"""
     # Cria o widget da página
     update_page = QWidget()
@@ -229,15 +229,15 @@ def update_client_data_page(main_window):
     search_id_label = QLabel("Digite o ID do Cliente:")
     search_id_layout.addWidget(search_id_label)
     # Campo de entrada para busca do ID
-    main_window.id_input_update = QLineEdit()
-    main_window.id_input_update.setFixedWidth(50)
-    search_id_layout.addWidget(main_window.id_input_update)
+    self.id_input_update = QLineEdit()
+    self.id_input_update.setFixedWidth(50)
+    search_id_layout.addWidget(self.id_input_update)
 
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
     search_button.clicked.connect(
-        lambda: search_client_for_update(main_window)
+        lambda: search_client_for_update(self)
     )
     search_id_layout.addWidget(search_button)
 
@@ -245,41 +245,41 @@ def update_client_data_page(main_window):
     layout.addLayout(search_id_layout)
 
     # Campos editáveis para os dados do cliente
-    main_window.name_input_update = QLineEdit()
-    main_window.email_input_update = QLineEdit()
-    main_window.phone_input_update = QLineEdit()
+    self.name_input_update = QLineEdit()
+    self.email_input_update = QLineEdit()
+    self.phone_input_update = QLineEdit()
 
     layout.addWidget(QLabel("Nome:"))
-    layout.addWidget(main_window.name_input_update)
+    layout.addWidget(self.name_input_update)
 
     layout.addWidget(QLabel("E-mail:"))
-    layout.addWidget(main_window.email_input_update)
+    layout.addWidget(self.email_input_update)
 
     layout.addWidget(QLabel("Telefone:"))
-    layout.addWidget(main_window.phone_input_update)
+    layout.addWidget(self.phone_input_update)
 
     # Botão para salvar as alterações
     save_button = QPushButton("Salvar Alterações")
     save_button.clicked.connect(
-        lambda: update_client_data(main_window)
+        lambda: update_client_data(self)
     )
     layout.addWidget(save_button)
 
     # Label para feedback de status
-    main_window.result_label_update = QLabel()
-    layout.addWidget(main_window.result_label_update)
+    self.result_label_update = QLabel()
+    layout.addWidget(self.result_label_update)
 
     # Botão para voltar ao menu principal
     return_button = QPushButton("Voltar para o Menu")
-    return_button.clicked.connect(main_window.show_main_menu)
+    return_button.clicked.connect(self.show_main_menu)
     layout.addWidget(return_button)
 
     # Configura o layout da página
     update_page.setLayout(layout)
-    main_window.stacked_widget.addWidget(update_page)
+    self.stacked_widget.addWidget(update_page)
 
 
-def delete_client_page(main_window):
+def delete_client_page(self):
     """Cria a página para deletar um cliente pelo ID"""
     # Cria o widget da página
     delete_page = QWidget()
@@ -306,13 +306,13 @@ def delete_client_page(main_window):
     layout.addWidget(return_button)
 
     # Ação para voltar ao menu principal
-    return_button.clicked.connect(main_window.show_main_menu)
+    return_button.clicked.connect(self.show_main_menu)
 
     # Ação para deletar o cliente ao clicar no botão
     delete_button.clicked.connect(
-        lambda: confirm_delete(main_window, id_input.text())
+        lambda: confirm_delete(self, id_input.text())
     )
 
     # Define o layout da página
     delete_page.setLayout(layout)
-    main_window.stacked_widget.addWidget(delete_page)
+    self.stacked_widget.addWidget(delete_page)
