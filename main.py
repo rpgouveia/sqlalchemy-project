@@ -55,7 +55,7 @@ class MainWindowApp(QWidget):
             self.db.close()
         event.accept()
 
-    # Funções para mostrar as janelas
+    # Funções para mostrar as páginas
     def show_main_menu(self):
         """Exibe o menu principal"""
         self.stacked_widget.setCurrentIndex(0)
