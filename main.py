@@ -34,7 +34,7 @@ class MainWindowApp(QWidget):
         # Configuração do layout principal
         self.layout = QVBoxLayout()
 
-        # Criando um widget empilhado (para navegação entre telas)
+        # Criando um widget empilhado para navegação entre telas
         self.stacked_widget = QStackedWidget()
         self.layout.addWidget(self.stacked_widget)
 
