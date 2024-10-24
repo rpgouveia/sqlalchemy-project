@@ -11,6 +11,14 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QHeaderView,
 )
+from gui.input_handlers import (
+    save_new_client,
+    search_client,
+    search_client_for_update,
+    update_client_data,
+    update_clients_table,
+    confirm_delete,
+)
 
 
 def create_main_menu(main_window):
@@ -94,7 +102,7 @@ def create_register_client_page(main_window):
 
     # Botão para salvar o cliente
     submit_button = QPushButton("Cadastrar Cliente")
-    submit_button.clicked.connect(main_window.save_new_client)
+    submit_button.clicked.connect(lambda: save_new_client(main_window))
 
     # Botão para voltar ao menu
     return_button = QPushButton("Voltar para o Menu")
@@ -167,7 +175,7 @@ def list_all_clients_page(main_window):
         main_window.stacked_widget.addWidget(main_window.list_page)
 
     # Busca e exibe os dados atualizados
-    main_window.update_clients_table()
+    update_clients_table(main_window)
 
 
 def retrieve_client_data_page(main_window):
@@ -194,7 +202,7 @@ def retrieve_client_data_page(main_window):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(main_window.search_client)
+    search_button.clicked.connect(lambda: search_client(main_window))
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela
@@ -238,7 +246,7 @@ def update_client_data_page(main_window):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(main_window.search_client_for_update)
+    search_button.clicked.connect(lambda: search_client_for_update(main_window))
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela
@@ -260,7 +268,7 @@ def update_client_data_page(main_window):
 
     # Botão para salvar as alterações
     save_button = QPushButton("Salvar Alterações")
-    save_button.clicked.connect(main_window.update_client_data)
+    save_button.clicked.connect(lambda: update_client_data(main_window))
     layout.addWidget(save_button)
 
     # Label para feedback de status
@@ -303,12 +311,12 @@ def delete_client_page(main_window):
     return_button = QPushButton("Voltar para o Menu")
     layout.addWidget(return_button)
 
-    # Define o layout da página
-    delete_page.setLayout(layout)
-    main_window.stacked_widget.addWidget(delete_page)
-
     # Ação para voltar ao menu principal
     return_button.clicked.connect(main_window.show_main_menu)
 
     # Ação para deletar o cliente ao clicar no botão
-    delete_button.clicked.connect(lambda: main_window.confirm_delete(id_input.text()))
+    delete_button.clicked.connect(lambda: confirm_delete(main_window, id_input.text()))
+
+    # Define o layout da página
+    delete_page.setLayout(layout)
+    main_window.stacked_widget.addWidget(delete_page)
