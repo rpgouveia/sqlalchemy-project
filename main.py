@@ -83,7 +83,6 @@ class MainWindowApp(QWidget):
         self.stacked_widget.setCurrentIndex(5)
 
 
-# Startup Application
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
