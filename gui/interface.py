@@ -21,6 +21,177 @@ from gui.input_handlers import (
 )
 
 
+def create_login_page(self):
+    """Cria a página de login"""
+    login_page = QWidget()
+    layout = QVBoxLayout()
+
+    # Título
+    title_label = QLabel("Login")
+    title_label.setAlignment(Qt.AlignCenter)
+    layout.addWidget(title_label)
+
+    # Campos de login
+    form_layout = QFormLayout()
+
+    self.username_input = QLineEdit()
+    self.password_input = QLineEdit()
+    self.password_input.setEchoMode(QLineEdit.Password)
+
+    form_layout.addRow("Usuário:", self.username_input)
+    form_layout.addRow("Senha:", self.password_input)
+
+    layout.addLayout(form_layout)
+
+    # Botão de login
+    login_button = QPushButton("Entrar")
+    login_button.clicked.connect(lambda: self.handle_login())
+
+    # Botão de login como convidado
+    exit_button = QPushButton("Sair do programa")
+    exit_button.clicked.connect(self.close)
+
+    layout.addWidget(login_button)
+    layout.addWidget(exit_button)
+
+    login_page.setLayout(layout)
+    self.login_page_index = self.stacked_widget.addWidget(login_page)
+
+
+def create_admin_menu(self):
+    """Cria o menu de administrador"""
+    admin_menu = QWidget()
+    layout = QVBoxLayout()
+
+    # Título
+    title_label = QLabel("Menu do Administrador")
+    title_label.setAlignment(Qt.AlignCenter)
+    layout.addWidget(title_label)
+
+    # Botões do menu admin
+    create_user_button = QPushButton("Criar Novo Usuário")
+    list_users_button = QPushButton("Listar Usuários")
+    delete_user_button = QPushButton("Excluir Usuário")
+
+    # Botão para acessar o sistema principal
+    access_system_button = QPushButton("Acessar Sistema Principal")
+    logout_button = QPushButton("Sair")
+
+    # Conectando os botões às funções
+    create_user_button.clicked.connect(self.show_create_user_page)
+    list_users_button.clicked.connect(self.show_list_users_page)
+    delete_user_button.clicked.connect(self.show_delete_user_page)
+    access_system_button.clicked.connect(self.show_main_menu)
+    logout_button.clicked.connect(self.show_login_page)
+
+    # Adicionando os botões ao layout
+    layout.addWidget(create_user_button)
+    layout.addWidget(list_users_button)
+    layout.addWidget(delete_user_button)
+    layout.addWidget(access_system_button)
+    layout.addWidget(logout_button)
+
+    admin_menu.setLayout(layout)
+    self.admin_menu_index = self.stacked_widget.addWidget(admin_menu)
+
+
+def create_user_page(self):
+    """Cria a página de cadastro de usuário"""
+    create_user_page = QWidget()
+    layout = QVBoxLayout()
+
+    # Título
+    title_label = QLabel("Criar Novo Usuário")
+    title_label.setAlignment(Qt.AlignCenter)
+    layout.addWidget(title_label)
+
+    # Form
+    form_layout = QFormLayout()
+
+    self.new_username_input = QLineEdit()
+    self.new_password_input = QLineEdit()
+    self.new_password_input.setEchoMode(QLineEdit.Password)
+    self.is_admin_input = QLineEdit()
+
+    form_layout.addRow("Nome de Usuário:", self.new_username_input)
+    form_layout.addRow("Senha:", self.new_password_input)
+    form_layout.addRow("É Admin (sim/não):", self.is_admin_input)
+
+    layout.addLayout(form_layout)
+
+    # Botões
+    save_button = QPushButton("Salvar Usuário")
+    return_button = QPushButton("Voltar")
+
+    save_button.clicked.connect(lambda: self.save_new_user())
+    return_button.clicked.connect(self.show_admin_menu)
+
+    layout.addWidget(save_button)
+    layout.addWidget(return_button)
+
+    create_user_page.setLayout(layout)
+    self.create_user_index = self.stacked_widget.addWidget(create_user_page)
+
+
+def list_users_page(self):
+    """Cria a página de listagem de usuários"""
+    list_users_page = QWidget()
+    layout = QVBoxLayout()
+
+    # Título
+    title_label = QLabel("Lista de Usuários")
+    title_label.setAlignment(Qt.AlignCenter)
+    layout.addWidget(title_label)
+
+    # Tabela de usuários
+    self.users_table = QTableWidget()
+    self.users_table.setColumnCount(3)
+    self.users_table.setHorizontalHeaderLabels(["ID", "Usuário", "Admin"])
+
+    # Configurando a tabela
+    self.users_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+    layout.addWidget(self.users_table)
+
+    # Botão de retorno
+    return_button = QPushButton("Voltar")
+    return_button.clicked.connect(self.show_admin_menu)
+    layout.addWidget(return_button)
+
+    list_users_page.setLayout(layout)
+    self.list_users_index = self.stacked_widget.addWidget(list_users_page)
+
+
+def delete_user_page(self):
+    """Cria a página para deletar usuários"""
+    delete_user_page = QWidget()
+    layout = QVBoxLayout()
+
+    # Título
+    title_label = QLabel("Excluir Usuário")
+    title_label.setAlignment(Qt.AlignCenter)
+    layout.addWidget(title_label)
+
+    # Campo para ID do usuário
+    form_layout = QFormLayout()
+    self.delete_user_id_input = QLineEdit()
+    form_layout.addRow("ID do Usuário:", self.delete_user_id_input)
+    layout.addLayout(form_layout)
+
+    # Botões
+    delete_button = QPushButton("Excluir")
+    return_button = QPushButton("Voltar")
+
+    delete_button.clicked.connect(lambda: self.delete_user())
+    return_button.clicked.connect(self.show_admin_menu)
+
+    layout.addWidget(delete_button)
+    layout.addWidget(return_button)
+
+    delete_user_page.setLayout(layout)
+    self.delete_user_index = self.stacked_widget.addWidget(delete_user_page)
+
+
 def create_main_menu(self):
     """Cria o menu principal com botões para diferentes funcionalidades"""
 
@@ -53,7 +224,7 @@ def create_main_menu(self):
 
     # Definindo Layout do menu principal
     main_menu.setLayout(layout)
-    self.stacked_widget.addWidget(main_menu)
+    self.main_menu_index = self.stacked_widget.addWidget(main_menu)
 
 
 def create_register_client_page(self):
@@ -105,16 +276,16 @@ def create_register_client_page(self):
 
     # Definindo Layout da Página
     register_page.setLayout(layout)
-    self.stacked_widget.addWidget(register_page)
+    self.register_client_index = self.stacked_widget.addWidget(register_page)
 
 
 def list_all_clients_page(self):
     """Cria a página de listagem de clientes"""
     # Verifica se a página de listagem já foi criada
-    if hasattr(self, "list_page"):
+    if hasattr(self, "list_clients_page"):
         self.table.clearContents()
     else:
-        self.list_page = QWidget()
+        self.list_clients_page = QWidget()
         layout = QVBoxLayout()
 
         # Título
@@ -131,21 +302,15 @@ def list_all_clients_page(self):
         self.table.horizontalHeader().setSectionResizeMode(
             0, QHeaderView.ResizeToContents
         )
-        self.table.horizontalHeader().setSectionResizeMode(
-            1, QHeaderView.Stretch
-        )
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(
             2, QHeaderView.ResizeToContents
         )
         self.table.horizontalHeader().setSectionResizeMode(
             3, QHeaderView.ResizeToContents
         )
-        self.table.horizontalHeader().setSectionResizeMode(
-            4, QHeaderView.Stretch
-        )
-        self.table.horizontalHeader().setSectionResizeMode(
-            5, QHeaderView.Stretch
-        )
+        self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Stretch)
         # Ordenação
         self.table.setSortingEnabled(True)
 
@@ -159,8 +324,8 @@ def list_all_clients_page(self):
         layout.addWidget(return_button)
 
         # Configura o layout da página
-        self.list_page.setLayout(layout)
-        self.stacked_widget.addWidget(self.list_page)
+        self.list_clients_page.setLayout(layout)
+        self.list_clients_index = self.stacked_widget.addWidget(self.list_clients_page)
 
     # Busca e exibe os dados atualizados
     update_clients_table(self)
@@ -190,9 +355,7 @@ def retrieve_client_data_page(self):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(
-        lambda: search_client(self)
-    )
+    search_button.clicked.connect(lambda: search_client(self))
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela
@@ -209,7 +372,7 @@ def retrieve_client_data_page(self):
 
     # Configura o layout da página
     retrieve_page.setLayout(layout)
-    self.stacked_widget.addWidget(retrieve_page)
+    self.retrieve_client_data_index = self.stacked_widget.addWidget(retrieve_page)
 
 
 def update_client_data_page(self):
@@ -236,9 +399,7 @@ def update_client_data_page(self):
     # Botão para buscar cliente
     search_button = QPushButton("Buscar Cliente")
     search_button.setFixedWidth(100)
-    search_button.clicked.connect(
-        lambda: search_client_for_update(self)
-    )
+    search_button.clicked.connect(lambda: search_client_for_update(self))
     search_id_layout.addWidget(search_button)
 
     # Adiciona o layout horizontal ao layout da janela
@@ -260,9 +421,7 @@ def update_client_data_page(self):
 
     # Botão para salvar as alterações
     save_button = QPushButton("Salvar Alterações")
-    save_button.clicked.connect(
-        lambda: update_client_data(self)
-    )
+    save_button.clicked.connect(lambda: update_client_data(self))
     layout.addWidget(save_button)
 
     # Label para feedback de status
@@ -276,7 +435,7 @@ def update_client_data_page(self):
 
     # Configura o layout da página
     update_page.setLayout(layout)
-    self.stacked_widget.addWidget(update_page)
+    self.update_client_data_index = self.stacked_widget.addWidget(update_page)
 
 
 def delete_client_page(self):
@@ -309,10 +468,8 @@ def delete_client_page(self):
     return_button.clicked.connect(self.show_main_menu)
 
     # Ação para deletar o cliente ao clicar no botão
-    delete_button.clicked.connect(
-        lambda: confirm_delete(self, id_input.text())
-    )
+    delete_button.clicked.connect(lambda: confirm_delete(self, id_input.text()))
 
     # Define o layout da página
     delete_page.setLayout(layout)
-    self.stacked_widget.addWidget(delete_page)
+    self.delete_client_index = self.stacked_widget.addWidget(delete_page)
