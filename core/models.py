@@ -51,11 +51,11 @@ class Client(Base):
 
 class Users(Base):
     __tablename__           = "users"
-    username: Mapped[str]     = mapped_column(String(255), nullable=False)
+    username: Mapped[str]     = mapped_column(String(255), nullable=False, unique=True)
     fullname: Mapped[str]     = mapped_column(String(255), nullable=False)
-    phone: Mapped[str]        = mapped_column(String(11), nullable=False)
+    phone: Mapped[str]        = mapped_column(String(11), nullable=False, unique=True)
     email: Mapped[str]        = mapped_column(String(255), nullable=False, unique=True)
-    access_level: Mapped[str] = mapped_column(String(255), nullable=False)
+    access_level: Mapped[str] = mapped_column(String(20), nullable=False)
 
     def __repr__(self) -> str:
         return (
