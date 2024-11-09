@@ -6,6 +6,7 @@ dependencies:
   - _libgcc_mutex=0.1=conda_forge
   - _openmp_mutex=4.5=2_gnu
   - alsa-lib=1.2.12=h4ab18f5_0
+  - bcrypt=4.2.0=py313h920b4c0_1
   - bzip2=1.0.8=h4bc722e_7
   - ca-certificates=2024.8.30=hbcca054_0
   - cairo=1.18.0=hebfffa5_3
