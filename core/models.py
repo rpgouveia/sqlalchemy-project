@@ -48,3 +48,23 @@ class Client(Base):
             f")"
         )
 
+
+class Users(Base):
+    __tablename__           = "users"
+    username: Mapped[str]     = mapped_column(String(255), nullable=False)
+    fullname: Mapped[str]     = mapped_column(String(255), nullable=False)
+    phone: Mapped[str]        = mapped_column(String(11), nullable=False)
+    email: Mapped[str]        = mapped_column(String(255), nullable=False, unique=True)
+    access_level: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    def __repr__(self) -> str:
+        return (
+            f"User(\n"
+            f"  id: {self.id},\n"
+            f"  username: {self.username},\n"
+            f"  fullname: {self.fullname},\n"
+            f"  phone: {self.phone},\n"
+            f"  email: {self.email}\n"
+            f"  access_level: {self.access_level}\n"
+            f")"
+        )
