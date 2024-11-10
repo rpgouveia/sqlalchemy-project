@@ -81,12 +81,11 @@ def save_new_user(self):
                 f"Erro ao criar usuário: {str(e)}"
             )
 
-    except Exception as e:
-        self.db.rollback()
-        QMessageBox.critical(
+    except ValueError as e:
+        QMessageBox.warning(
             self,
-            "Erro",
-            f"Erro ao criar usuário: {str(e)}"
+            "Erro de Validação",
+            str(e)
         )
 
 
