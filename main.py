@@ -86,6 +86,7 @@ class MainWindowApp(QWidget):
 
     def show_list_users_page(self):
         """Exibe a página de listagem de usuários"""
+        list_users_page(self)
         self.stacked_widget.setCurrentIndex(3)
 
     def show_delete_user_page(self):

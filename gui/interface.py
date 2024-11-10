@@ -18,12 +18,10 @@ from gui.client_input_handlers import (
     search_client_for_update,
     update_client_data,
     update_clients_table,
-    confirm_delete
+    confirm_delete,
 )
 from gui.login_input_handlers import handle_login
-from gui.user_input_handlers import (
-    save_new_user,
-)
+from gui.user_input_handlers import save_new_user, update_users_table
 from gui.utils import toggle_password_visibility
 
 
@@ -116,8 +114,8 @@ def create_user_page(self):
 
     self.new_username_input = QLineEdit()
     self.new_fullname_input = QLineEdit()
-    self.new_phone_input    = QLineEdit()
-    self.new_email_input    = QLineEdit()
+    self.new_phone_input = QLineEdit()
+    self.new_email_input = QLineEdit()
     self.new_password_input = QLineEdit()
     self.new_password_input.setEchoMode(QLineEdit.Password)
     self.is_admin_input = QCheckBox()
@@ -154,31 +152,51 @@ def create_user_page(self):
 
 def list_users_page(self):
     """Cria a página de listagem de usuários"""
-    list_users_page = QWidget()
-    layout = QVBoxLayout()
+    if hasattr(self, "list_users_page"):
+        self.users_table.clearContents()
+    else:
+        self.list_users_page = QWidget()
+        layout = QVBoxLayout()
 
-    # Título
-    title_label = QLabel("Lista de Usuários")
-    title_label.setAlignment(Qt.AlignCenter)
-    layout.addWidget(title_label)
+        # Título
+        title_label = QLabel("Lista de Usuários")
+        title_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title_label)
 
-    # Tabela de usuários
-    self.users_table = QTableWidget()
-    self.users_table.setColumnCount(3)
-    self.users_table.setHorizontalHeaderLabels(["ID", "Usuário", "Admin"])
+        # Tabela de usuários
+        self.users_table = QTableWidget()
+        self.users_table.setColumnCount(6)
+        self.users_table.setHorizontalHeaderLabels(
+            ["ID", "Usuário", "Nome Completo", "Telefone", "E-mail", "Nível de Acesso"]
+        )
 
-    # Configurando a tabela
-    self.users_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        # Configurando a tabela
+        self.users_table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeToContents
+        )
+        self.users_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.users_table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
+        self.users_table.horizontalHeader().setSectionResizeMode(
+            3, QHeaderView.ResizeToContents
+        )
+        self.users_table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)
+        self.users_table.horizontalHeader().setSectionResizeMode(
+            5, QHeaderView.ResizeToContents
+        )
+        self.users_table.setSortingEnabled(True)
 
-    layout.addWidget(self.users_table)
+        layout.addWidget(self.users_table)
 
-    # Botão de retorno
-    return_button = QPushButton("Voltar")
-    return_button.clicked.connect(self.show_admin_menu)
-    layout.addWidget(return_button)
+        # Botão de retorno
+        return_button = QPushButton("Voltar")
+        return_button.clicked.connect(self.show_admin_menu)
+        layout.addWidget(return_button)
 
-    list_users_page.setLayout(layout)
-    self.stacked_widget.addWidget(list_users_page)
+        self.list_users_page.setLayout(layout)
+        self.stacked_widget.addWidget(self.list_users_page)
+
+    # Busca e exibe os dados atualizados
+    update_users_table(self)
 
 
 def delete_user_page(self):
