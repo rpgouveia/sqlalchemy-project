@@ -92,10 +92,6 @@ def save_new_user(self):
         )
 
 
-def list_users(self):
-    ...
-
-
 def update_users_table(self):
     """Atualiza a tabela de clientes com os dados mais recentes do banco"""
     users = get_all_users(self.db)
