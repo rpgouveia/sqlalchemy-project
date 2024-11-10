@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QLineEdit,
+    QCheckBox,
     QDateEdit,
     QFormLayout,
     QTableWidget,
@@ -20,6 +21,10 @@ from gui.client_input_handlers import (
     confirm_delete
 )
 from gui.login_input_handlers import handle_login
+from gui.user_input_handlers import (
+    save_new_user,
+)
+from gui.utils import toggle_password_visibility
 
 
 def create_login_page(self):
@@ -110,13 +115,26 @@ def create_user_page(self):
     form_layout = QFormLayout()
 
     self.new_username_input = QLineEdit()
+    self.new_fullname_input = QLineEdit()
+    self.new_phone_input    = QLineEdit()
+    self.new_email_input    = QLineEdit()
     self.new_password_input = QLineEdit()
     self.new_password_input.setEchoMode(QLineEdit.Password)
-    self.is_admin_input = QLineEdit()
+    self.is_admin_input = QCheckBox()
+
+    password_layout = QHBoxLayout()
+    show_password_button = QPushButton("👁")
+    show_password_button.setFixedWidth(30)
+    show_password_button.clicked.connect(lambda: toggle_password_visibility(self))
+    password_layout.addWidget(self.new_password_input)
+    password_layout.addWidget(show_password_button)
 
     form_layout.addRow("Nome de Usuário:", self.new_username_input)
-    form_layout.addRow("Senha:", self.new_password_input)
-    form_layout.addRow("É Admin (sim/não):", self.is_admin_input)
+    form_layout.addRow("Nome completo:", self.new_fullname_input)
+    form_layout.addRow("Telefone (com DDD):", self.new_phone_input)
+    form_layout.addRow("E-mail:", self.new_email_input)
+    form_layout.addRow("Senha:", password_layout)
+    form_layout.addRow("Este usuário é Admin:", self.is_admin_input)
 
     layout.addLayout(form_layout)
 
@@ -124,7 +142,7 @@ def create_user_page(self):
     save_button = QPushButton("Salvar Usuário")
     return_button = QPushButton("Voltar")
 
-    save_button.clicked.connect(lambda: self.save_new_user())
+    save_button.clicked.connect(lambda: save_new_user(self))
     return_button.clicked.connect(self.show_admin_menu)
 
     layout.addWidget(save_button)
