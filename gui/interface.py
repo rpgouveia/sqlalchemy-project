@@ -11,15 +11,15 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QHeaderView,
 )
-from gui.input_handlers import (
+from gui.client_input_handlers import (
     save_new_client,
     search_client,
     search_client_for_update,
     update_client_data,
     update_clients_table,
-    confirm_delete,
-    handle_login
+    confirm_delete
 )
+from gui.login_input_handlers import handle_login
 
 
 def create_login_page(self):
