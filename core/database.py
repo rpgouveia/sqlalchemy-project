@@ -18,14 +18,12 @@ def initialize_database():
 
         if existing_users == 0:
             default_users = [
-                Users(username="admin", fullname="Administrator", phone="00000000000", email="admin@mail.com", access_level="admin"),
-                Users(username="user", fullname="Standard User", phone="00000000001", email="user@mail.com", access_level="user"),
-                Users(username="guest", fullname="Guest User", phone="00000000002", email="guest@mail.com", access_level="guest"),
+                Users(username="admin", fullname="Administrador", phone="00000000000", email="admin@mail.com", access_level="admin"),
+                Users(username="user", fullname="Usuário", phone="00000000001", email="user@mail.com", access_level="user")
             ]
 
             default_users[0].set_password("admin123")
             default_users[1].set_password("user123")
-            default_users[2].set_password("guest123")
 
             db.add_all(default_users)
             db.commit()

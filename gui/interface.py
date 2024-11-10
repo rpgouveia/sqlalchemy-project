@@ -18,6 +18,7 @@ from gui.input_handlers import (
     update_client_data,
     update_clients_table,
     confirm_delete,
+    handle_login
 )
 
 
@@ -45,9 +46,9 @@ def create_login_page(self):
 
     # Botão de login
     login_button = QPushButton("Entrar")
-    login_button.clicked.connect(lambda: self.handle_login())
+    login_button.clicked.connect(lambda: handle_login(self))
 
-    # Botão de login como convidado
+    # Botão de Sair do Programa
     exit_button = QPushButton("Sair do programa")
     exit_button.clicked.connect(self.close)
 
@@ -55,7 +56,7 @@ def create_login_page(self):
     layout.addWidget(exit_button)
 
     login_page.setLayout(layout)
-    self.login_page_index = self.stacked_widget.addWidget(login_page)
+    self.stacked_widget.addWidget(login_page)
 
 
 def create_admin_menu(self):
@@ -92,7 +93,7 @@ def create_admin_menu(self):
     layout.addWidget(logout_button)
 
     admin_menu.setLayout(layout)
-    self.admin_menu_index = self.stacked_widget.addWidget(admin_menu)
+    self.stacked_widget.addWidget(admin_menu)
 
 
 def create_user_page(self):
@@ -130,7 +131,7 @@ def create_user_page(self):
     layout.addWidget(return_button)
 
     create_user_page.setLayout(layout)
-    self.create_user_index = self.stacked_widget.addWidget(create_user_page)
+    self.stacked_widget.addWidget(create_user_page)
 
 
 def list_users_page(self):
@@ -159,7 +160,7 @@ def list_users_page(self):
     layout.addWidget(return_button)
 
     list_users_page.setLayout(layout)
-    self.list_users_index = self.stacked_widget.addWidget(list_users_page)
+    self.stacked_widget.addWidget(list_users_page)
 
 
 def delete_user_page(self):
@@ -189,7 +190,7 @@ def delete_user_page(self):
     layout.addWidget(return_button)
 
     delete_user_page.setLayout(layout)
-    self.delete_user_index = self.stacked_widget.addWidget(delete_user_page)
+    self.stacked_widget.addWidget(delete_user_page)
 
 
 def create_main_menu(self):
@@ -224,7 +225,7 @@ def create_main_menu(self):
 
     # Definindo Layout do menu principal
     main_menu.setLayout(layout)
-    self.main_menu_index = self.stacked_widget.addWidget(main_menu)
+    self.stacked_widget.addWidget(main_menu)
 
 
 def create_register_client_page(self):
@@ -276,7 +277,7 @@ def create_register_client_page(self):
 
     # Definindo Layout da Página
     register_page.setLayout(layout)
-    self.register_client_index = self.stacked_widget.addWidget(register_page)
+    self.stacked_widget.addWidget(register_page)
 
 
 def list_all_clients_page(self):
@@ -325,7 +326,7 @@ def list_all_clients_page(self):
 
         # Configura o layout da página
         self.list_clients_page.setLayout(layout)
-        self.list_clients_index = self.stacked_widget.addWidget(self.list_clients_page)
+        self.stacked_widget.addWidget(self.list_clients_page)
 
     # Busca e exibe os dados atualizados
     update_clients_table(self)
@@ -372,7 +373,7 @@ def retrieve_client_data_page(self):
 
     # Configura o layout da página
     retrieve_page.setLayout(layout)
-    self.retrieve_client_data_index = self.stacked_widget.addWidget(retrieve_page)
+    self.stacked_widget.addWidget(retrieve_page)
 
 
 def update_client_data_page(self):
@@ -435,7 +436,7 @@ def update_client_data_page(self):
 
     # Configura o layout da página
     update_page.setLayout(layout)
-    self.update_client_data_index = self.stacked_widget.addWidget(update_page)
+    self.stacked_widget.addWidget(update_page)
 
 
 def delete_client_page(self):
@@ -472,4 +473,4 @@ def delete_client_page(self):
 
     # Define o layout da página
     delete_page.setLayout(layout)
-    self.delete_client_index = self.stacked_widget.addWidget(delete_page)
+    self.stacked_widget.addWidget(delete_page)

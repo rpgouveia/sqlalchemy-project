@@ -74,49 +74,49 @@ class MainWindowApp(QWidget):
         """Exibe a página de login"""
         self.current_user = None
         self.is_admin = False
-        self.stacked_widget.setCurrentIndex(self.login_page_index)
+        self.stacked_widget.setCurrentIndex(0)
 
     def show_admin_menu(self):
         """Exibe o menu de administrador"""
-        self.stacked_widget.setCurrentIndex(self.admin_menu_index)
+        self.stacked_widget.setCurrentIndex(1)
 
     def show_create_user_page(self):
         """Exibe a página de criação de usuário"""
-        self.stacked_widget.setCurrentIndex(self.create_user_index)
+        self.stacked_widget.setCurrentIndex(2)
 
     def show_list_users_page(self):
         """Exibe a página de listagem de usuários"""
-        self.stacked_widget.setCurrentIndex(self.list_users_index)
+        self.stacked_widget.setCurrentIndex(3)
 
     def show_delete_user_page(self):
         """Exibe a página de exclusão de usuário"""
-        self.stacked_widget.setCurrentIndex(self.delete_user_index)
+        self.stacked_widget.setCurrentIndex(4)
 
     def show_main_menu(self):
         """Exibe o menu principal"""
-        self.stacked_widget.setCurrentIndex(self.main_menu_index)
+        self.stacked_widget.setCurrentIndex(5)
 
     def show_register_client_page(self):
         """Exibe a página de cadastro de cliente"""
-        self.stacked_widget.setCurrentIndex(self.register_client_index)
+        self.stacked_widget.setCurrentIndex(6)
 
     def show_list_clients_page(self):
         """Exibe a página de listagem de clientes"""
         # Atualiza a tabela de clientes antes de exibir a página
         list_all_clients_page(self)
-        self.stacked_widget.setCurrentIndex(self.list_clients_index)
+        self.stacked_widget.setCurrentIndex(7)
 
     def show_retrieve_client_data_page(self):
         """Exibe a página de dados do cliente"""
-        self.stacked_widget.setCurrentIndex(self.retrieve_client_data_index)
+        self.stacked_widget.setCurrentIndex(8)
 
     def show_update_client_data_page(self):
         """Exibe a página de dados do cliente"""
-        self.stacked_widget.setCurrentIndex(self.update_client_data_index)
+        self.stacked_widget.setCurrentIndex(9)
 
     def show_delete_client_page(self):
         """Exibe a página de dados do cliente"""
-        self.stacked_widget.setCurrentIndex(self.delete_client_index)
+        self.stacked_widget.setCurrentIndex(10)
 
 
 if __name__ == "__main__":
