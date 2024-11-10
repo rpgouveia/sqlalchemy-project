@@ -21,7 +21,11 @@ from gui.client_input_handlers import (
     confirm_delete,
 )
 from gui.login_input_handlers import handle_login
-from gui.user_input_handlers import save_new_user, update_users_table
+from gui.user_input_handlers import (
+    save_new_user,
+    update_users_table,
+    confirm_delete_user,
+)
 from gui.utils import toggle_password_visibility
 
 
@@ -219,7 +223,9 @@ def delete_user_page(self):
     delete_button = QPushButton("Excluir")
     return_button = QPushButton("Voltar")
 
-    delete_button.clicked.connect(lambda: self.delete_user())
+    delete_button.clicked.connect(
+        lambda: confirm_delete_user(self, self.delete_user_id_input.text())
+    )
     return_button.clicked.connect(self.show_admin_menu)
 
     layout.addWidget(delete_button)

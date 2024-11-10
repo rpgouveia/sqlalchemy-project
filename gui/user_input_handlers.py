@@ -10,6 +10,7 @@ from PySide6.QtCore import Qt
 from core.crud import (
     create_user,
     get_all_users,
+    delete_user
 )
 from core.models import Users
 from sqlalchemy.exc import IntegrityError
@@ -126,5 +127,33 @@ def update_users_table(self):
         self.users_table.setItem(row, 5, access_level_item)
 
 
-def delete_user(self):
-    ...
+def confirm_delete_user(self, id):
+    """Confirma e executa a exclusão do usuário"""
+    if not id.isdigit():
+        QMessageBox.warning(self, "Erro", "O ID deve ser um número válido.")
+        return
+
+    user_id = int(id)
+    user = self.db.query(Users).filter(Users.id == user_id).first()
+
+    if not user:
+        QMessageBox.warning(
+            self, "Erro", f"Usuário com ID {user_id} não encontrado."
+        )
+        return
+
+    confirm = QMessageBox.question(
+        self,
+        "Confirmação",
+        f"Tem certeza que deseja excluir o usuário com ID {user.id} ({user.fullname})?",
+        QMessageBox.Yes | QMessageBox.No,
+    )
+
+    if confirm == QMessageBox.Yes:
+        delete_user(self.db, user_id)
+        QMessageBox.information(self, "Sucesso", "Usuário excluído com sucesso.")
+        self.delete_user_id_input.clear()
+    else:
+        QMessageBox.information(
+            self, "Cancelado", "Operação de exclusão cancelada."
+        )
