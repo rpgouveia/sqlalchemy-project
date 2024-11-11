@@ -6,7 +6,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QLineEdit,
-    QCheckBox,
+    QGroupBox,
+    QRadioButton,
     QDateEdit,
     QFormLayout,
     QTableWidget,
@@ -122,7 +123,26 @@ def create_user_page(self):
     self.new_email_input = QLineEdit()
     self.new_password_input = QLineEdit()
     self.new_password_input.setEchoMode(QLineEdit.Password)
-    self.is_admin_input = QCheckBox()
+
+    # Grupo de radio buttons para os cargos
+    role_group = QGroupBox("Cargo do Usuário")
+    role_layout = QVBoxLayout()
+
+    self.admin_radio = QRadioButton("Administrador")
+    self.user_radio = QRadioButton("Usuário")
+    self.guest_radio = QRadioButton("Convidado")
+
+    # Definir o cargo "Usuário" como padrão
+    self.user_radio.setChecked(True)
+
+    self.admin_radio.setToolTip("Acesso total ao sistema")
+    self.user_radio.setToolTip("Acesso para operações regulares")
+    self.guest_radio.setToolTip("Acesso limitado apenas para visualização")
+
+    role_layout.addWidget(self.admin_radio)
+    role_layout.addWidget(self.user_radio)
+    role_layout.addWidget(self.guest_radio)
+    role_group.setLayout(role_layout)
 
     password_layout = QHBoxLayout()
     show_password_button = QPushButton("👁")
@@ -136,7 +156,7 @@ def create_user_page(self):
     form_layout.addRow("Telefone (com DDD):", self.new_phone_input)
     form_layout.addRow("E-mail:", self.new_email_input)
     form_layout.addRow("Senha:", password_layout)
-    form_layout.addRow("Este usuário é Admin:", self.is_admin_input)
+    form_layout.addRow(role_group)
 
     layout.addLayout(form_layout)
 

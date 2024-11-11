@@ -57,14 +57,14 @@ class Users(Base):
     phone: Mapped[str]        = mapped_column(String(11), nullable=False, unique=True)
     email: Mapped[str]        = mapped_column(String(255), nullable=False, unique=True)
     password: Mapped[bytes]   = mapped_column(String(60), nullable=False)
-    access_level: Mapped[str] = mapped_column(String(20), nullable=False)
+    access_level: Mapped[str] = mapped_column(String(20), nullable=False, default="user")
 
     def set_password(self, plaintext_password: str) -> None:
-        hashed = bcrypt.hashpw(plaintext_password.encode('utf-8'), bcrypt.gensalt())
+        hashed = bcrypt.hashpw(plaintext_password.encode("utf-8"), bcrypt.gensalt())
         self.password = hashed
 
     def check_password(self, plaintext_password: str) -> bool:
-        return bcrypt.checkpw(plaintext_password.encode('utf-8'), self.password)
+        return bcrypt.checkpw(plaintext_password.encode("utf-8"), self.password)
 
     def __repr__(self) -> str:
         return (

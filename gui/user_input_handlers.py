@@ -41,7 +41,12 @@ def save_new_user(self):
             )
             return
 
-        access_level = "admin" if self.is_admin_input.isChecked() else "user"
+        if self.admin_radio.isChecked():
+            access_level = "admin"
+        elif self.user_radio.isChecked():
+            access_level = "user"
+        else:
+            access_level = "guest"
 
         new_user = Users(
             username=username,
@@ -67,7 +72,7 @@ def save_new_user(self):
             self.new_phone_input.clear()
             self.new_email_input.clear()
             self.new_password_input.clear()
-            self.is_admin_input.setChecked(False)
+            self.user_radio.setChecked(True)
 
         except IntegrityError:
             self.db.rollback()

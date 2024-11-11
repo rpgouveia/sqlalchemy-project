@@ -25,7 +25,7 @@ def handle_login(self):
         if user and user.check_password(password):
             # Login bem sucedido
             self.current_user = user
-            self.is_admin = user.access_level == "admin"
+            self.access_level = user.access_level
             
             welcome_msg = f"Bem-vindo, {user.fullname}!"
             QMessageBox.information(
@@ -36,7 +36,7 @@ def handle_login(self):
             )
 
             # Redireciona baseado no nível de acesso
-            if self.is_admin:
+            if self.access_level == "admin":
                 self.stacked_widget.setCurrentIndex(1)
             else:
                 self.stacked_widget.setCurrentIndex(5)

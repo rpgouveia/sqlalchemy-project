@@ -31,7 +31,7 @@ class MainWindowApp(QWidget):
 
         # Configuração inicial
         self.current_user = None
-        self.is_admin = False
+        self.access_level = False
 
         try:
             self.db: Session = connect_db()
@@ -73,7 +73,7 @@ class MainWindowApp(QWidget):
     def show_login_page(self):
         """Exibe a página de login"""
         self.current_user = None
-        self.is_admin = False
+        self.access_level = False
         self.stacked_widget.setCurrentIndex(0)
 
     def show_admin_menu(self):
