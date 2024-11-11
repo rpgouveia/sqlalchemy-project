@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QMessageBox
 
+
 def check_permission(self, required_level, success_callback, access_denied_message):
     """Verifica permissão e exibe a página se permitido, ou mostra mensagem de erro."""
     if self.access_level == "guest":
