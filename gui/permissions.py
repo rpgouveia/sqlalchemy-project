@@ -5,7 +5,7 @@ def check_permission(self, required_level, success_callback, access_denied_messa
     if self.access_level == "guest":
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
-        msg.setText("Acesso Negado")
+        msg.setText("Acesso Negado!")
         msg.setInformativeText(access_denied_message)
         msg.setWindowTitle("Erro de Permissão")
         msg.exec()
@@ -20,13 +20,19 @@ def check_permission(self, required_level, success_callback, access_denied_messa
         msg.exec()
         self.show_login_page()
 
+message = (
+    "Você não tem permissão para cadastrar novos clientes.\n\n"
+    "Apenas usuários com nível de acesso 'user' ou 'admin' "
+    "podem realizar esta operação."
+)
+
 def show_register_page_with_permission(self):
     """Verifica permissão antes de mostrar a página de cadastro"""
     check_permission(
         self,
         required_level=["admin", "user"],
         success_callback=self.show_register_client_page,
-        access_denied_message="Você não tem permissão para cadastrar novos clientes. Apenas usuários com nível de acesso 'user' ou 'admin' podem realizar esta operação."
+        access_denied_message=message
     )
 
 def show_update_page_with_permission(self):
@@ -35,7 +41,7 @@ def show_update_page_with_permission(self):
         self,
         required_level=["admin", "user"],
         success_callback=self.show_update_client_data_page,
-        access_denied_message="Você não tem permissão para atualizar dados de clientes. Apenas usuários com nível de acesso 'user' ou 'admin' podem realizar esta operação."
+        access_denied_message=message
     )
 
 def show_delete_page_with_permission(self):
@@ -44,5 +50,5 @@ def show_delete_page_with_permission(self):
         self,
         required_level=["admin", "user"],
         success_callback=self.show_delete_client_page,
-        access_denied_message="Você não tem permissão para excluir clientes. Apenas usuários com nível de acesso 'user' ou 'admin' podem realizar esta operação."
+        access_denied_message=message
     )
