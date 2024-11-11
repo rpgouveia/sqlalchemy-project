@@ -28,6 +28,11 @@ from gui.user_input_handlers import (
     confirm_delete_user,
 )
 from gui.utils import toggle_password_visibility
+from gui.permissions import (
+    show_register_page_with_permission,
+    show_update_page_with_permission,
+    show_delete_page_with_permission
+)
 
 
 def create_login_page(self):
@@ -270,11 +275,11 @@ def create_main_menu(self):
     exit_button = QPushButton("Sair do programa")
 
     # Conectando os botões às funções que alteram as páginas
-    register_button.clicked.connect(self.show_register_client_page)
+    register_button.clicked.connect(lambda: show_register_page_with_permission(self))
     list_all_clients_button.clicked.connect(self.show_list_clients_page)
     retrieve_client_button.clicked.connect(self.show_retrieve_client_data_page)
-    update_client_button.clicked.connect(self.show_update_client_data_page)
-    delete_client_button.clicked.connect(self.show_delete_client_page)
+    update_client_button.clicked.connect(lambda: show_update_page_with_permission(self))
+    delete_client_button.clicked.connect(lambda: show_delete_page_with_permission(self))
     exit_button.clicked.connect(self.close)
 
     # Adicionando os botões ao layout

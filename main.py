@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QWidget,
     QVBoxLayout,
-    QStackedWidget,
+    QStackedWidget
 )
 from sqlalchemy.orm import Session
 from core.database import connect_db
@@ -31,7 +31,7 @@ class MainWindowApp(QWidget):
 
         # Configuração inicial
         self.current_user = None
-        self.access_level = False
+        self.access_level = None
 
         try:
             self.db: Session = connect_db()
@@ -73,7 +73,7 @@ class MainWindowApp(QWidget):
     def show_login_page(self):
         """Exibe a página de login"""
         self.current_user = None
-        self.access_level = False
+        self.access_level = None
         self.stacked_widget.setCurrentIndex(0)
 
     def show_admin_menu(self):
