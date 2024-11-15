@@ -12,7 +12,7 @@ from core.crud import (
     get_all_users,
     delete_user
 )
-from core.models import Users
+from core.models import User
 from sqlalchemy.exc import IntegrityError
 
 
@@ -48,7 +48,7 @@ def save_new_user(self):
         else:
             access_level = "guest"
 
-        new_user = Users(
+        new_user = User(
             username=username,
             fullname=fullname,
             phone=phone,
@@ -139,7 +139,7 @@ def confirm_delete_user(self, id):
         return
 
     user_id = int(id)
-    user = self.db.query(Users).filter(Users.id == user_id).first()
+    user = self.db.query(User).filter(User.id == user_id).first()
 
     if not user:
         QMessageBox.warning(

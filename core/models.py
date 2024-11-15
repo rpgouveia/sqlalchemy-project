@@ -50,7 +50,7 @@ class Client(Base):
         )
 
 
-class Users(Base):
+class User(Base):
     __tablename__           = "users"
     username: Mapped[str]     = mapped_column(String(255), nullable=False, unique=True)
     fullname: Mapped[str]     = mapped_column(String(255), nullable=False)

@@ -1,6 +1,6 @@
 from typing import List, Union
 from sqlalchemy.orm import Session
-from core.models import Client, Users
+from core.models import Client, User
 
 
 def create_client(db: Session, client: Client) -> Client:
@@ -30,29 +30,29 @@ def delete_client(db: Session, client_id: int) -> None:
     db.commit()
 
 
-def create_user(db: Session, user: Users) -> Users:
+def create_user(db: Session, user: User) -> User:
     db.add(user)
     db.commit()
     db.refresh(user)
     return user
 
 
-def get_all_users(db: Session) -> List[Users]:
-    return db.query(Users).all()
+def get_all_users(db: Session) -> List[User]:
+    return db.query(User).all()
 
 
-def get_user(db: Session, user_id: int) -> Union[Users | None]:
-    return db.query(Users).filter(Users.id == user_id).first()
+def get_user(db: Session, user_id: int) -> Union[User | None]:
+    return db.query(User).filter(User.id == user_id).first()
 
 
-def update_user(db: Session, user: Users) -> Users:
+def update_user(db: Session, user: User) -> User:
     db.commit()
     db.refresh(user)
     return user
 
 
 def delete_user(db: Session, user_id: int) -> None:
-    user: Union[Users | None] = db.query(Users).filter(Users.id == user_id).first()
+    user: Union[User | None] = db.query(User).filter(User.id == user_id).first()
     db.delete(user)
     db.commit()
 

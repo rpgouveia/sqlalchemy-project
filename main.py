@@ -8,7 +8,6 @@ from PySide6.QtWidgets import (
 )
 from sqlalchemy.orm import Session
 from core.database import connect_db
-from sqlalchemy.orm import Session
 from gui.interface import (
     create_main_menu,
     create_register_client_page,

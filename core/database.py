@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker, Session
-from core.models import Base, Users
+from core.models import Base, User
 
 
 engine: Engine = create_engine("sqlite:///insurance.db", echo=False)
@@ -14,12 +14,12 @@ def connect_db() -> Session:
 def initialize_database():
     db: Session = connect_db()
     try:
-        existing_users = db.query(Users).count()
+        existing_users = db.query(User).count()
 
         if existing_users == 0:
             default_users = [
-                Users(username="admin", fullname="Administrador", phone="00000000000", email="admin@mail.com", access_level="admin"),
-                Users(username="user", fullname="Usuário", phone="00000000001", email="user@mail.com", access_level="user")
+                User(username="admin", fullname="Administrador", phone="00000000000", email="admin@mail.com", access_level="admin"),
+                User(username="user", fullname="Usuário", phone="00000000001", email="user@mail.com", access_level="user")
             ]
 
             default_users[0].set_password("admin123")
