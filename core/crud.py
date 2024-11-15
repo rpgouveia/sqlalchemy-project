@@ -30,6 +30,14 @@ def delete_client(db: Session, client_id: int) -> None:
     db.commit()
 
 
+def get_clients_by_city(db: Session, city: str) -> List[Client]:
+    clients = db.query(Client).filter(Client.city == city).all()
+    if clients:
+        return clients
+    else:
+        return db.query(Client).all()
+
+
 def create_user(db: Session, user: User) -> User:
     db.add(user)
     db.commit()

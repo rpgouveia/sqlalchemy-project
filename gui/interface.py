@@ -20,6 +20,7 @@ from gui.client_input_handlers import (
     update_client_data,
     update_clients_table,
     confirm_delete,
+    filter_clients_by_city
 )
 from gui.login_input_handler import handle_login
 from gui.user_input_handlers import (
@@ -348,7 +349,7 @@ def create_register_client_page(self):
 
 
 def list_all_clients_page(self):
-    """Cria a página de listagem de clientes"""
+    """Cria a página de listagem de clientes com filtro por cidade"""
     # Verifica se a página de listagem já foi criada
     if hasattr(self, "list_clients_page"):
         self.table.clearContents()
@@ -358,6 +359,16 @@ def list_all_clients_page(self):
 
         # Título
         label = QLabel("Lista de Clientes")
+
+        # Projeção: Campo para filtrar por cidade
+        filter_layout = QVBoxLayout()
+        self.city_filter_input = QLineEdit()
+        self.city_filter_input.setPlaceholderText("Digite o nome da cidade")
+        filter_button = QPushButton("Filtrar por Cidade")
+        filter_button.clicked.connect(lambda: filter_clients_by_city(self))
+
+        filter_layout.addWidget(self.city_filter_input)
+        filter_layout.addWidget(filter_button)
 
         # Cria a tabela para exibir os clientes
         self.table = QTableWidget()
@@ -388,6 +399,7 @@ def list_all_clients_page(self):
 
         # Adiciona os widgets ao layout
         layout.addWidget(label)
+        layout.addLayout(filter_layout)
         layout.addWidget(self.table)
         layout.addWidget(return_button)
 

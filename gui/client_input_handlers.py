@@ -18,6 +18,7 @@ from core.crud import (
     get_client,
     update_client,
     delete_client,
+    get_clients_by_city
 )
 from core.models import Client
 from sqlalchemy.exc import IntegrityError
@@ -280,4 +281,20 @@ def confirm_delete(self, id):
         QMessageBox.information(
             self, "Cancelado", "Operação de exclusão cancelada."
         )
+
+
+def filter_clients_by_city(self):
+    """Filtra os clientes pelo nome da cidade"""
+    city_name = self.city_filter_input.text().strip()
+    filtered_clients = get_clients_by_city(self.db, city_name)
+
+    # Atualiza a tabela com os dados filtrados
+    self.table.setRowCount(len(filtered_clients))
+    for row, client in enumerate(filtered_clients):
+        self.table.setItem(row, 0, QTableWidgetItem(str(client.id)))
+        self.table.setItem(row, 1, QTableWidgetItem(client.name))
+        self.table.setItem(row, 2, QTableWidgetItem(client.cpf))
+        self.table.setItem(row, 3, QTableWidgetItem(str(client.age)))
+        self.table.setItem(row, 4, QTableWidgetItem(client.city))
+        self.table.setItem(row, 5, QTableWidgetItem(client.email))
 
