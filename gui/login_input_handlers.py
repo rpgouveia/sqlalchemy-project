@@ -20,7 +20,7 @@ def handle_login(self):
     try:
         # Busca o usuário usando a conexão existente
         query_stmt = select(Users).where(Users.username == username)
-        user = self.db.scalar(query_stmt)
+        user: Users = self.db.scalar(query_stmt)
 
         if user and user.check_password(password):
             # Login bem sucedido
