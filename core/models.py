@@ -51,7 +51,7 @@ class Client(Base):
 
 
 class User(Base):
-    __tablename__           = "users"
+    __tablename__           = "user"
     username: Mapped[str]     = mapped_column(String(255), nullable=False, unique=True)
     fullname: Mapped[str]     = mapped_column(String(255), nullable=False)
     phone: Mapped[str]        = mapped_column(String(11), nullable=False, unique=True)
