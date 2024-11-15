@@ -15,7 +15,7 @@ def get_all_clients(db: Session) -> List[Client]:
 
 
 def get_client(db: Session, client_id: int) -> Union[Client | None]:
-    return db.query(Client).filter(Client.id == client_id).first()
+    return get_by_id(db, Client, client_id)
 
 
 def update_client(db: Session, client: Client) -> Client:
@@ -42,7 +42,7 @@ def get_all_users(db: Session) -> List[User]:
 
 
 def get_user(db: Session, user_id: int) -> Union[User | None]:
-    return db.query(User).filter(User.id == user_id).first()
+    return get_by_id(db, User, user_id)
 
 
 def update_user(db: Session, user: User) -> User:
@@ -56,3 +56,6 @@ def delete_user(db: Session, user_id: int) -> None:
     db.delete(user)
     db.commit()
 
+
+def get_by_id(db: Session, model, record_id: int):
+    return db.query(model).filter(model.id == record_id).first()
