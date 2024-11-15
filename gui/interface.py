@@ -21,7 +21,7 @@ from gui.client_input_handlers import (
     update_clients_table,
     confirm_delete,
 )
-from gui.login_input_handlers import handle_login
+from gui.login_input_handler import handle_login
 from gui.user_input_handlers import (
     save_new_user,
     update_users_table,
